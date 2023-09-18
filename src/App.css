@@ -13,8 +13,11 @@
   }
 }
 
+.radial-gradient {
+  background: linear-gradient( 43.5deg,#000000 0%, #051133 3.6%, #016194 50.6%, #061131 87.6% , #000000 100%);
+}
+
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +38,27 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.menu-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.menu-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.menu-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.menu-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
 }
