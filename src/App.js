@@ -3,6 +3,7 @@ import { Route,Routes } from "react-router-dom";
 
 import Navbar from './components/Navbar';
 import Home from './components/Home'
+import Login from './pages/login';
 
 import './App.css';
 
@@ -22,7 +23,8 @@ function App() {
 
 
       <Routes>
-        <Route path = "/" element = {<Home />} /> 
+        <Route path="/" element={<Home />} /> 
+        <Route path="/login" element={<Login />} />
         {/* <Route path = "/our-vision" element = {<Vision />} />  */}
         {/* <Route path = "/pricing" element = {<Pricing />} />  */}
         {/* <Route path = "/about-us" element = {<AboutUs />} />  */}
