@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: 'Poppins', sans-serif;
 }
 
 .App-logo {
@@ -14,21 +15,12 @@
 }
 
 .radial-gradient {
-  background: linear-gradient( 43.5deg,#000000 0%, #051133 3.6%, #016194 50.6%, #061131 87.6% , #000000 100%);
-}
+  /* background: linear-gradient( 43.5deg,#000000 0%, #051133 3.6%, #016194 50.6%, #061131 87.6% , #000000 100%); */
+  background: linear-gradient( 43.5deg,#016194 0%, #061131 50.6% , #000000 100%);
 
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
+  /* background-color: #ececec3b */
 
-.App-link {
-  color: #61dafb;
+
 }
 
 @keyframes App-logo-spin {
@@ -61,4 +53,9 @@
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 300ms, transform 300ms;
+}
+
+.elevation{
+  background-color: #ffffff18;
+  box-shadow: 0px 0px 24px 17px #ffffff0a
 }

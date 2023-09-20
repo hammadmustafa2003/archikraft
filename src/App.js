@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Route,Routes } from "react-router-dom";
 
 import Navbar from './components/Navbar';
-import Home from './components/Home'
+import Home from './components/Home';
+import Vision from './components/Vision';
+import Pricing from './components/Pricing';
+import About from "./components/About";
+import Footer from "./components/Footer";
+// import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css';
 
@@ -14,7 +19,7 @@ function App() {
 
 
   return (
-    <div className="App radial-gradient">
+    <div className="App">
       <Navbar 
         activeIndex={activeIndex} // Pass activeIndex as props
         onActiveIndexChange={handleActiveIndexChange} // Pass handleActiveIndexChange as props
@@ -22,17 +27,21 @@ function App() {
 
 
       <Routes>
-        <Route path = "/" element = {<Home />} /> 
-        {/* <Route path = "/our-vision" element = {<Vision />} />  */}
-        {/* <Route path = "/pricing" element = {<Pricing />} />  */}
-        {/* <Route path = "/about-us" element = {<AboutUs />} />  */}
+        <Route path = "/" element = {<Home navbarChange = {handleActiveIndexChange}/>} /> 
+        <Route path = "/our-vision" element = {<Vision navbarChange = {handleActiveIndexChange}/>} /> 
+        <Route path = "/pricing" element = {<Pricing navbarChange = {handleActiveIndexChange} />} /> 
+        <Route path = "/about-us" element = {<About navbarChange = {handleActiveIndexChange}/>} /> 
         {/* <Route path = "/profile" element = {<Profile />} />  */}
         {/* <Route path = "/admin" element = {<Admin />} /> */}
         {/* <Route path = "/admin-profile" element = {<AdminProfile />} />    */}
         {/* <Route path = "/admin-dashboard" element = {<AdminDashboard />} /> */}
          
       </Routes>
+
+      <Footer />
     </div>
+
+    
   );
 }
 

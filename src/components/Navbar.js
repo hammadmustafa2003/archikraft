@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { CSSTransition } from "react-transition-group"; // Import CSSTransition
+import { CSSTransition } from "react-transition-group";
+import {Link} from "react-router-dom"
 import LogoWhite from "../images/logo/Logo_white.png";
 import AccountImage from "../images/profile_white.png";
 import MobileMenu from "./MobileMenu";
 
 const Navbar = (props) => {
     const menuOptions = [
-        { name: "Home", url: "#" },
-        { name: "Our Vision", url: "#" },
-        { name: "Pricing", url: "#" },
-        { name: "About Us", url: "#" },
+        { name: "Home", url: "/" },
+        { name: "Our Vision", url: "/our-vision" },
+        { name: "Pricing", url: "/pricing" },
+        { name: "About Us", url: "/about-us" },
     ];
 
     const [showMenu, setShowMenu] = useState(false);
@@ -44,14 +45,13 @@ const Navbar = (props) => {
                                         }`}
                                     onClick={() => props.onActiveIndexChange(index)} // Add onClick handler
                                 >
-                                    <a
-                                        href={option.url}
-                                        className={`${index === props.activeIndex ? 'text-blue-400' : 'text-white hover:text-blue-300 transition-colors duration-50'
-                                            }`}
+                                    <Link
+                                        to={option.url}
+                                        className={`${index === props.activeIndex ? 'text-blue-400' : 'text-white hover:text-blue-300 transition-colors duration-50'}`}
                                     >
                                         {option.name}
                                         <div className="absolute w-0 bg-blue-500 h-1 left-0 bottom-0 transition-all origin-left"></div>
-                                    </a>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
@@ -104,11 +104,13 @@ const Navbar = (props) => {
                 timeout={300}
                 classNames="menu"
                 unmountOnExit>
-                <MobileMenu 
-                    toggleLogin={toggleLogin} 
+                <MobileMenu
+                    toggleLogin={toggleLogin}
+                    toggleMenu={toggleMenu}
                     activeIndex={props.activeIndex}
-                    onActiveIndexChange={props.onActiveIndexChange}
-                    menuOptions = {menuOptions}/>
+                    menuOptions={menuOptions} 
+                    login={login}
+                />
 
             </CSSTransition>
         </div>
