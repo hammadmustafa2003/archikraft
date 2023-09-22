@@ -8,6 +8,11 @@ import Vision from './components/Vision';
 import Pricing from './components/Pricing';
 import About from "./components/About";
 import Footer from "./components/Footer";
+import SignUp from "./pages/signup";
+import Forget from "./pages/forget";
+import OTP from "./pages/otp";
+import NewPass from "./pages/newpass";
+
 import './App.css';
 
 function App() {
@@ -19,7 +24,7 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar 
+      <Navbar
         activeIndex={activeIndex} // Pass activeIndex as props
         onActiveIndexChange={handleActiveIndexChange} // Pass handleActiveIndexChange as props
       />
@@ -27,23 +32,30 @@ function App() {
 
       <Routes>
         {/* <Route path = "/" element = {<Home />} />  */}
-        <Route path = "/" element = {<Home navbarChange = {handleActiveIndexChange}/>} /> 
-        <Route path = "/our-vision" element = {<Vision navbarChange = {handleActiveIndexChange}/>} /> 
-        <Route path = "/pricing" element = {<Pricing navbarChange = {handleActiveIndexChange} />} /> 
-        <Route path = "/about-us" element = {<About navbarChange = {handleActiveIndexChange}/>} /> 
+        <Route path = "/" element = {<Home navbarChange = {handleActiveIndexChange}/>} />
+        <Route path = "/our-vision" element = {<Vision navbarChange = {handleActiveIndexChange}/>} />
+        <Route path = "/pricing" element = {<Pricing navbarChange = {handleActiveIndexChange} />} />
+        <Route path = "/about-us" element = {<About navbarChange = {handleActiveIndexChange}/>} />
         <Route path="/login" element={<Login />} />
 
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/forget" element={<Forget />} />
+        <Route path="/otp" element={<OTP />} />
+        <Route path="/newpass" element={<NewPass />} />
+        {/* <Route path = "/our-vision" element = {<Vision />} />  */}
+        {/* <Route path = "/pricing" element = {<Pricing />} />  */}
+        {/* <Route path = "/about-us" element = {<AboutUs />} />  */}
         {/* <Route path = "/profile" element = {<Profile />} />  */}
         {/* <Route path = "/admin" element = {<Admin />} /> */}
         {/* <Route path = "/admin-profile" element = {<AdminProfile />} />    */}
         {/* <Route path = "/admin-dashboard" element = {<AdminDashboard />} /> */}
-         
+
       </Routes>
 
       <Footer />
     </div>
 
-    
+
   );
 }
 

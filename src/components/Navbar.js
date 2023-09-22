@@ -4,6 +4,8 @@ import {Link} from "react-router-dom"
 import LogoWhite from "../images/logo/Logo_white.png";
 import AccountImage from "../images/profile_white.png";
 import MobileMenu from "./MobileMenu";
+import { useNavigate } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 const Navbar = (props) => {
     const menuOptions = [
@@ -19,11 +21,16 @@ const Navbar = (props) => {
         setShowMenu(!showMenu);
     };
 
-    const [login, setLogin] = useState(false);
+    let navigate = useNavigate();
 
     const toggleLogin = () => {
-        setLogin(!login);
-    };
+        navigate("/login");
+    }
+
+    const toggleSignUp = () => {
+        navigate("/signup");
+    }
+
 
     return (
         <div>
@@ -56,26 +63,22 @@ const Navbar = (props) => {
                             ))}
                         </ul>
                     </div>
-
-                    {/* Account Image or Login Signup Page*/}
-                    {login ? (
-                        <img src={AccountImage}
-                            className="w-8 h-8 rounded-full hidden md:flex transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-110"
-                            alt="Account"
-                            onClick={toggleLogin} />
-                    ) : (
-                        <div className="flex">
-                            <button
-                                className="hidden md:flex transition ease-in-out delay-50 border-2 border-white bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-white  hover:text-blue-500 duration-150 p-2 text-white rounded-md mr-5"
-                                onClick={toggleLogin}>
-                                Sign In
+                    <div className="flex">
+                        <Container>
+                        <button
+                            className="hidden md:flex transition ease-in-out delay-50 border-2 border-white bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-white  hover:text-blue-500 duration-150 p-2 text-white rounded-md mr-5"
+                            onClick={toggleLogin}>
+                            Login
                             </button>
+                        </Container>
 
-                            <button className="hidden md:flex transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md">
-                                Register
+                        <Container>
+                            <button className="hidden md:flex transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md"
+                            onClick={toggleSignUp}>
+                            Sign Up
                             </button>
-                        </div>
-                    )}
+                        </Container>
+                    </div>
 
                     {/* Mobile Menu Button (Hamburger) */}
                     <div className="md:hidden">
@@ -106,9 +109,9 @@ const Navbar = (props) => {
                 unmountOnExit>
                 <MobileMenu
                     toggleLogin={toggleLogin}
-                    toggleMenu={toggleMenu}
+                    toggleSignUp={toggleSignUp}
                     activeIndex={props.activeIndex}
-                    menuOptions={menuOptions} 
+                    menuOptions={menuOptions}
                     login={login}
                 />
 
