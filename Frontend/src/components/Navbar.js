@@ -112,7 +112,6 @@ const Navbar = (props) => {
                     toggleSignUp={toggleSignUp}
                     activeIndex={props.activeIndex}
                     menuOptions={menuOptions}
-                    login={login}
                 />
 
             </CSSTransition>
