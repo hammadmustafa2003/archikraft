@@ -25,11 +25,12 @@ const MobileMenu = (props) => {
                                 <button 
                                     class="flex md:hidden text-xl bg-blue-500 hover:scale-110 p-3 text-white rounded-md mr-5"
                                     onClick={props.toggleLogin}>
-                                    Sign In
+                                    Login
                                 </button>
 
-                                <button class="flex md:hidden text-xl bg-white hover:-translate-y-1 p-3 text-blue-500 rounded-md">
-                                    Register
+                <button class="flex md:hidden text-xl bg-white hover:-translate-y-1 p-3 text-blue-500 rounded-md"
+                onClick={props.toggleSignUp}>
+                                    Sign Up
                                 </button>
                     </div>
                 </div>

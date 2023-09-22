@@ -4,6 +4,7 @@ import { Route,Routes } from "react-router-dom";
 import Navbar from './components/Navbar';
 import Home from './components/Home'
 import Login from './pages/login';
+import SignUp from "./pages/signup";
 
 import './App.css';
 
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} /> 
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         {/* <Route path = "/our-vision" element = {<Vision />} />  */}
         {/* <Route path = "/pricing" element = {<Pricing />} />  */}
         {/* <Route path = "/about-us" element = {<AboutUs />} />  */}

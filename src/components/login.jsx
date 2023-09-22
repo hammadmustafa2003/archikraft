@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+
 const LoginComponent = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -11,6 +12,10 @@ const LoginComponent = () => {
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
     };
+
+    const handleCaptchaChange = (value) => {
+        console.log("Captcha value:", value);
+    }
     
     return (
         <div className="w-screen h-screen flex justify-center items-center">
@@ -61,7 +66,7 @@ const LoginComponent = () => {
                     &copy;2023 ArchiKraft AI All rights reserved.
                 </p>
             </div>
-            </div>
+        </div>
     );
 }
     
