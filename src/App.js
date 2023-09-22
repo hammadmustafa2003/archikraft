@@ -5,6 +5,9 @@ import Navbar from './components/Navbar';
 import Home from './components/Home'
 import Login from './pages/login';
 import SignUp from "./pages/signup";
+import Forget from "./pages/forget";
+import OTP from "./pages/otp";
+import NewPass from "./pages/newpass";
 
 import './App.css';
 
@@ -27,6 +30,9 @@ function App() {
         <Route path="/" element={<Home />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/forget" element={<Forget />} />
+        <Route path="/otp" element={<OTP />} />
+        <Route path="/newpass" element={<NewPass />} />
         {/* <Route path = "/our-vision" element = {<Vision />} />  */}
         {/* <Route path = "/pricing" element = {<Pricing />} />  */}
         {/* <Route path = "/about-us" element = {<AboutUs />} />  */}
