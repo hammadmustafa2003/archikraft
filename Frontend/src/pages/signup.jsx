@@ -12,7 +12,7 @@ const SignUp = () => {
         const [name, setName] = useState("");
         const [confirmPassword, setConfirmPassword] = useState("");
         const [role, setRole] = useState("architect");
-        const [country, setCountry] = useState("PK");
+        const [country, setCountry] = useState("Pakistan");
         const [phoneNumber, setPhoneNumber] = useState("+923164117090");
     
         const { countries } = useCountries();
@@ -53,7 +53,7 @@ const SignUp = () => {
         return (
         <div className="w-screen h-screen flex justify-center items-center">
             <div className="w-full max-w-sm text-left">
-                <form className="bg-transparent/10   shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form className="bg-white/10   shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="flex items-center justify-between">
                         <div className="mb-6 mr-2">
                             <label className="block text-white text-sm font-bold mb-2">
