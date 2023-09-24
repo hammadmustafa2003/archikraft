@@ -30,7 +30,7 @@ const OTP = () => {
         // then a button for verify
         <div className="w-screen h-screen flex justify-center items-center">
             <div className="w-full max-w-xs text-left">
-                <form className="bg-transparent/10   shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <form className="bg-white/10   shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <div className="mb-4 text-center">
                         <h1 className="text-white text-2xl font-bold mb-2">
                             OTP has been sent to
