@@ -2,12 +2,17 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useLocation } from 'react-router-dom';
 
 const OTP = () => {
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
-  const { state } = this.props.location;
-  const otpSent = state.otp;
-  const { email } = state;
+  //const { state } = this.props.location;
+
+  const location = useLocation();
+  const email = location.state.email;
+  const votp = location.state.otp;
+
+  console.log(votp);
 
   let navigate = useNavigate();
   const handleOTPChange = (event) => {
