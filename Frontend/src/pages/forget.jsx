@@ -28,11 +28,11 @@ const Forget = () => {
       .post("http://localhost:5000/forgot-password", payload)
       .then((response) => {
         if (response.status === 200) {
-          navigate("/otp",{
+          navigate("/otp", {
             state: {
               email: email,
-              otp: response.data.otp
-            }
+              otp: response.data.otp,
+            },
           });
         } else if (response.status === 400) {
           document.getElementById("error").innerHTML =
