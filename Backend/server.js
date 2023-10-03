@@ -114,7 +114,25 @@ app.post('/forgot-password', async (req, res) => {
     }
     else if (status_code == 200) {
       const otp = getOTP();
-      res.status(200).json({ message: detail, otp: otp });
+      const apiUrl = 'https://moose-glad-squid.ngrok-free.app/send-email';
+      const response = await axios.get(apiUrl, {
+        params: {
+          email: email,
+          otp: otp
+        },
+        headers: headers
+      });
+      console.log(response.data);
+      let { status_code, detail } = response.data;
+      if (status_code == 400) {
+        res.status(400).json({ error: detail });
+      }
+      else if (status_code == 200) {
+        res.status(200).json({ message: detail, otp: otp });
+      }
+      else {
+        res.status(500).json({ error: 'An error occurred during forgot password' });
+      }
     }
     else {
       res.status(500).json({ error: 'An error occurred during forgot password' });

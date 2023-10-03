@@ -6,11 +6,9 @@ import { useLocation } from "react-router-dom";
 
 const OTP = () => {
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
-  //const { state } = this.props.location;
-
   const location = useLocation();
-  const email = location.state.email;
-  const votp = location.state.otp;
+  const { email } = location.state;
+  const otpSent = location.state.otp;
 
   console.log(votp);
 
