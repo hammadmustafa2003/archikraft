@@ -20,6 +20,9 @@ const Forget = () => {
       }, 3000);
       return;
     }
+    document.getElementById("sendOTP").disabled = true;
+    document.getElementById("sendOTP").innerHTML = "Sending OTP...";
+
     const payload = {
       email: email,
     };
@@ -40,12 +43,16 @@ const Forget = () => {
           setTimeout(() => {
             document.getElementById("error").innerHTML = "";
           }, 3000);
+          document.getElementById("sendOTP").disabled = false;
+          document.getElementById("sendOTP").innerHTML = "Send OTP";
         } else if (response.status === 500) {
           document.getElementById("error").innerHTML =
             "<p class='text-red-400 text-md italic'>Server error.</p>";
           setTimeout(() => {
             document.getElementById("error").innerHTML = "";
           }, 3000);
+          document.getElementById("sendOTP").disabled = false;
+          document.getElementById("sendOTP").innerHTML = "Send OTP";
         }
       })
       .catch((error) => {
@@ -55,6 +62,8 @@ const Forget = () => {
         setTimeout(() => {
           document.getElementById("error").innerHTML = "";
         }, 3000);
+        document.getElementById("sendOTP").disabled = false;
+        document.getElementById("sendOTP").innerHTML = "Send OTP";
       });
   };
 
@@ -81,6 +90,7 @@ const Forget = () => {
               className="bg-transparent border border-blue-400 hover:bg-blue-400 text-blue-400 font-bold py-2 px-4 rounded focus:shadow-outline hover:text-white hover:border-transparent"
               type="button"
               onClick={handleSendOTP}
+              id="sendOTP"
             >
               Send OTP
             </button>

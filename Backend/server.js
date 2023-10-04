@@ -143,6 +143,40 @@ app.post('/forgot-password', async (req, res) => {
 });
 
 
+app.post('/reset-password', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/update-password';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '567'
+    };
+    // make password as string
+    const passwordString = password.toString();
+    const response = await axios.get(apiUrl, {
+      params: {
+        email: email,
+        password: passwordString
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 400) {
+      res.status(400).json({ error: detail });
+    }
+    else if (status_code == 200) {
+      res.status(200).json({ message: detail });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during reset password' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during reset password' });
+  }
+});
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
