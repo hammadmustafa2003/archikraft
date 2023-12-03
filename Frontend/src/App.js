@@ -18,6 +18,7 @@ import "./App.css";
 import { Component, Suspense } from "react";
 import { HashRouter } from "react-router-dom";
 import "./scss/style.scss";
+import Dashboard from "./views/dashboard/Dashboard";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -73,17 +74,11 @@ function App() {
         <Route path="/forget" element={<Forget />} />
         <Route path="/otp" element={<OTP />} />
         <Route path="/newpass" element={<NewPass />} />
-        {/* <Route path = "/our-vision" element = {<Vision />} />  */}
-        {/* <Route path = "/pricing" element = {<Pricing />} />  */}
-        {/* <Route path = "/about-us" element = {<AboutUs />} />  */}
-        {/* <Route path = "/profile" element = {<Profile />} />  */}
-        {/* <Route path = "/admin" element = {<Admin />} /> */}
-        {/* <Route path = "/admin-profile" element = {<AdminProfile />} />    */}
-        {/* <Route path = "/admin-dashboard" element = {<AdminDashboard />} /> */}
 
         {/* Admin Routes */}
-        <Route exact path="/login_admin" name="Login Page" element={<Admin_Login />} />
-        {/* <Route
+        <Route exact path="/login_admin" name="Login Page" element={<Admin_Login/>} />
+        <Route exact path="/dashboard" name="Login Page" element={<Dashboard/>} />
+        <Route
           exact
           path="/register"
           name="Register Page"
@@ -91,7 +86,7 @@ function App() {
         />
         <Route exact path="/404" name="Page 404" element={<Page404 />} />
         <Route exact path="/500" name="Page 500" element={<Page500 />} />
-        <Route path="*" name="Home" element={<DefaultLayout />} /> */}
+        <Route path="*" name="Home" element={<DefaultLayout />} />
       </Routes>
 
       <Footer />
