@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import missionImg from "../images/mission.png";
-import audienceImg from "../images/audience.png";
-import goalImg from "../images/goals.png";
+import missionImg from "../images_user/mission.png";
+import audienceImg from "../images_user/audience.png";
+import goalImg from "../images_user/goals.png";
 import AOS from 'aos';
 import "../../node_modules/aos/dist/aos.css"
 

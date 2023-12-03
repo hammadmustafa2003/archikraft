@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import Typist from 'react-typist-component';
 import AOS from 'aos';
 
-import LogoWhite from "../images/logo/Logo_white.png";
+import LogoWhite from "../images_user/logo/Logo_white.png";
 import videoSpeech from "../assets/videos/SpeechToText.mp4";
 import videoFormats from "../assets/videos/formats.mp4";
-import imageAI from "../images/2D architectura 1.png";
+import imageAI from "../images_user/2D architectura 1.png";
 import "../../node_modules/aos/dist/aos.css"
 
 function Home(props) {
@@ -20,8 +20,8 @@ function Home(props) {
 
     const feature1 = (
         <div className='flex flex-row justify-around flex-wrap mb-36 rounded-md elevation py-10 md:py-52'
-            data-aos="fade-up" 
-            data-aos-duration='1000' 
+            data-aos="fade-up"
+            data-aos-duration='1000'
             data-aos-easing="ease-in-quad">
             <div className="flex flex-col justify-center max-w-3xl text-left px-5">
                 <h2 className="text-xl md:text-3xl mb-10 font-bold text-white"> No need to learn intricate controls anymore! </h2>

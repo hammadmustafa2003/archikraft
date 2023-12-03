@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import AOS from 'aos';
 import "../../node_modules/aos/dist/aos.css"
-import plan1 from '../images/plan1.png';
+import plan1 from '../images_user/plan1.png';
 
-import dev1 from '../images/hammad.jpg';
-import dev2 from '../images/saad.jpg';
-import dev3 from '../images/talal.jpg';
+import dev1 from '../images_user/hammad.jpg';
+import dev2 from '../images_user/saad.jpg';
+import dev3 from '../images_user/talal.jpg';
 
-import githubIcon from '../images/github.png';
-import linkedinIcon from '../images/linkedin.png';
-import websiteIcon from '../images/web.png';
+import githubIcon from '../images_user/github.png';
+import linkedinIcon from '../images_user/linkedin.png';
+import websiteIcon from '../images_user/web.png';
 
 const teamBlock = (name, img, github, linkedin, website, description) => {
     return (

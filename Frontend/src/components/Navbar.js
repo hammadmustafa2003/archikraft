@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import {Link} from "react-router-dom"
-import LogoWhite from "../images/logo/Logo_white.png";
-import AccountImage from "../images/profile_white.png";
+import LogoWhite from "../images_user/logo/Logo_white.png";
+import AccountImage from "../images_user/profile_white.png";
 import MobileMenu from "./MobileMenu";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
