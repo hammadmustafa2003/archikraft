@@ -38,6 +38,8 @@ const Chat = (props) => {
     setChatOutputVisible(!isChatOutputVisible);
   };
 
+  props.navbarChange(-1);
+
   //   props.handleShowFooter(false);
 
   const [chats, setChats] = useState(conversation);
@@ -72,7 +74,7 @@ const Chat = (props) => {
     "md:text-[1rem] text-sm font-light bg-[rgb(0,255,0,0.05)] border-[1px] border-[#00cc00] filter backdrop-blur-xl text-white py-2 px-3 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl self-start max-w-[75%] text-left m-10";
 
   return (
-    <div className="flex flex-row flex-nowrap justify-center align-middle h-screen relative">
+    <div className="flex flex-row flex-nowrap justify-center align-middle h-screen md:h-screen relative">
       <div
         className={`transform transition-transform ease-out duration-300 absolute top-0 left-0 h-full w-full z-20 filter backdrop-blur-xl ${
           isChatHistoryVisible ? "translate-x-0" : "-translate-x-full"
@@ -81,7 +83,7 @@ const Chat = (props) => {
         {<ChatHistory toggleHistory={toggleChatHistory} />}
       </div>
 
-      <div key="conversation" className="md:w-2/3 w-[90%] h-full relative">
+      <div key="conversation" className="md:w-2/3 w-full h-full relative">
         <button
           className="absolute top-6 left-5 border-2 border-white rounded-md hover:border-0 hover:bg-green-500 hover:scale-125 ease-out duration-150 z-10"
           onClick={toggleChatHistory}

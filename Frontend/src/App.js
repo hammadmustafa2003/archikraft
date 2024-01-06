@@ -13,6 +13,7 @@ import Forget from "./pages/forget";
 import OTP from "./pages/otp";
 import NewPass from "./pages/newpass";
 import Chat from "./pages/chat";
+import Admin from "./pages/admin";
 
 import './App.css';
 
@@ -25,10 +26,13 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar
-        activeIndex={activeIndex} // Pass activeIndex as props
-        onActiveIndexChange={handleActiveIndexChange} // Pass handleActiveIndexChange as props
-      />
+      
+      {activeIndex !== -1 && (
+        <Navbar
+          activeIndex={activeIndex} // Pass activeIndex as props
+          onActiveIndexChange={handleActiveIndexChange} // Pass handleActiveIndexChange as props
+        />
+      )}
 
 
       <Routes>
@@ -38,11 +42,12 @@ function App() {
         <Route path = "/pricing" element = {<Pricing navbarChange = {handleActiveIndexChange} />} />
         <Route path = "/about-us" element = {<About navbarChange = {handleActiveIndexChange}/>} />
         <Route path="/login" element={<Login />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat" element={<Chat navbarChange = {handleActiveIndexChange}/>} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget" element={<Forget />} />
         <Route path="/otp" element={<OTP />} />
         <Route path="/newpass" element={<NewPass />} />
+        <Route path="/admin" element={<Admin navbarChange = {handleActiveIndexChange} />} />
         {/* <Route path = "/our-vision" element = {<Vision />} />  */}
         {/* <Route path = "/pricing" element = {<Pricing />} />  */}
         {/* <Route path = "/about-us" element = {<AboutUs />} />  */}
@@ -53,7 +58,7 @@ function App() {
 
       </Routes>
 
-      <Footer />
+      {activeIndex !== -1 && <Footer />}
     </div>
 
 
