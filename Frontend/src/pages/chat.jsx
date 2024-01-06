@@ -8,24 +8,23 @@ import floorMapIcon from "../images/floor_plan_icon.png";
 import SendIcon from "../images/send.png";
 import MicIcon from "../images/mic.png";
 import LogoWhite from "../images/logo/Logo_white.png";
+import download from "../images/download_white.png";
+import pdf from "../images/pdf.svg";
 import axios from "axios";
+import { ReactSession } from "react-client-session";
+import { useEffect } from "react";
+import Pdf from "react-to-pdf";
+import { jsPDF } from "jspdf";
+import { createRef } from "react";
 
-// Mock conversation data
-var conversation = [
-  {
-    source: "User",
-    message: "Hello! I want a house map for a plot in east of San Fracisco",
-  },
-  { source: "Bot", message: "Can you please tell how many rooms you want?" },
-  {
-    source: "User",
-    message:
-      "I need total of 5 rooms from which 2 should be bedroom, a living room and a storage room. I need total of 5 rooms from which 2 should be bedroom, a living room and a storage room. I need total of 5 rooms from which 2 should be bedroom, a living room and a storage room",
-  },
-  { source: "Bot", message: "Please explain further..." },
-];
+const style_sent =
+  "md:text-[1rem] text-sm font-normal bg-[rgb(0,0,255,0.05)] border-[1px] border-[#0000cc] filter backdrop-blur-xl text-white py-2 px-3 rounded-tl-3xl rounded-bl-3xl rounded-tr-3xl self-end max-w-[75%] text-right m-10";
+const style_recv =
+  "md:text-[1rem] text-sm font-light bg-[rgb(0,255,0,0.05)] border-[1px] border-[#00cc00] filter backdrop-blur-xl text-white py-2 px-3 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl self-start max-w-[75%] text-left m-10";
 
 const Chat = (props) => {
+  const [sent, setSent] = useState(style_sent);
+  const [recv, setRecv] = useState(style_recv);
   const [isChatHistoryVisible, setChatHistoryVisible] = useState(false);
 
   const toggleChatHistory = () => {
@@ -42,8 +41,40 @@ const Chat = (props) => {
 
   //   props.handleShowFooter(false);
 
-  const [chats, setChats] = useState(conversation);
+  const [chats, setChats] = useState([]);
   const [message, setMessage] = useState("");
+
+  // get previous chats from backend
+  const getChats = () => {
+    axios
+      .get("http://localhost:5000/getMessages", {
+        params: {
+          user: ReactSession.get("email"),
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setChats(res.data.messages);
+        const chatbox = document.getElementById("chatbox");
+        res.data.messages.forEach((chat) => {
+          const div = document.createElement("div");
+          div.className = `${
+            chat.sender === ReactSession.get("email") ? style_sent : style_recv
+          }`;
+          div.innerHTML = chat.message;
+          chatbox.appendChild(div);
+        });
+        chatbox.scrollTop = chatbox.scrollHeight;
+        // update chatbox
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getChats();
+  }, []);
 
   const sendMsg = (e) => {
     e.preventDefault();
@@ -58,9 +89,26 @@ const Chat = (props) => {
       }, 3000);
       return;
     }
-    const newChats = [...chats, { source: "User", message: message }];
-    setChats(newChats);
-    setMessage("");
+    // if session is not set, redirect to login page
+    if (ReactSession.get("email") === null) {
+      alert("Please login to continue.");
+      window.location.href = "/login";
+    }
+    // send message to backend
+    const payload = {
+      message: message,
+      sender: ReactSession.get("email"),
+    };
+
+    axios
+      .post("http://localhost:5000/saveMessage", payload)
+      .then((res) => {
+        console.log(res.data);
+        getChats();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const parseAudio = (e) => {
@@ -68,10 +116,31 @@ const Chat = (props) => {
     console.log("audio");
   };
 
-  const style_sent =
-    "md:text-[1rem] text-sm font-normal bg-[rgb(0,0,255,0.05)] border-[1px] border-[#0000cc] filter backdrop-blur-xl text-white py-2 px-3 rounded-tl-3xl rounded-bl-3xl rounded-tr-3xl self-end max-w-[75%] text-right m-10";
-  const style_recv =
-    "md:text-[1rem] text-sm font-light bg-[rgb(0,255,0,0.05)] border-[1px] border-[#00cc00] filter backdrop-blur-xl text-white py-2 px-3 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl self-start max-w-[75%] text-left m-10";
+  // add a download button to download the generated floor plan
+  const downloadFloorPlan = () => {
+    const img = document.getElementById("generated_floor_plan");
+    const link = document.createElement("a");
+    link.href = img.src;
+    link.download = "floor_plan.png";
+    link.click();
+  };
+
+  const downloadFloorPlanPDF = () => {
+    // convert image to pdf
+    const img = document.getElementById("generated_floor_plan");
+    const link = document.createElement("a");
+    link.href = img.src;
+
+    const pdfRef = createRef();
+    const options = {
+      orientation: "landscape",
+      unit: "px",
+      format: [img.width, img.height],
+    };
+    const pdf = new jsPDF(options);
+    pdf.addImage(img.src, "PNG", 0, 0);
+    pdf.save("floor_plan.pdf");
+  };
 
   return (
     <div className="flex flex-row flex-nowrap justify-center align-middle h-screen md:h-screen relative">
@@ -120,18 +189,10 @@ const Chat = (props) => {
             </div>
           </Link>
 
-          <div className="flex flex-col flex-grow space-y-5 mt-2 md:mt-5 mb-5 md:mb-10 overflow-y-auto scrollbar-hide">
-            {chats.map((item, index) => (
-              <div
-                key={index}
-                className={`${
-                  item.source === "User" ? style_sent : style_recv
-                }`}
-              >
-                {item.message}
-              </div>
-            ))}
-          </div>
+          <div
+            className="flex flex-col flex-grow space-y-5 mt-2 md:mt-5 mb-5 md:mb-10 overflow-y-auto scrollbar-hide"
+            id="chatbox"
+          ></div>
           <form
             className="flex flex-row justify-center items-center space-x-2"
             onSubmit={sendMsg}
@@ -178,10 +239,23 @@ const Chat = (props) => {
               <img src={closeIcon} alt="close" className="w-12 h-12" />
             </button>
             <img
+              id="generated_floor_plan"
               src={plan1}
               className="fixed w-[75vmin] md:top-[12.5%] md:left-1/3 top-1/3 left-[12.5%]"
               alt="generated_floor_plan"
             />
+            <button
+              className="fixed bottom-5 right-5 border-0"
+              onClick={downloadFloorPlan}
+            >
+              <img src={download} alt="close" className="w-12 h-12" />
+            </button>
+            <button
+              className="fixed bottom-5 left-5 border-0"
+              onClick={downloadFloorPlanPDF}
+            >
+              <img src={pdf} alt="close" className="w-12 h-12" />
+            </button>
           </div>
         )}
       </div>
