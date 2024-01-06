@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import {Link} from "react-router-dom"
 import LogoWhite from "../images/logo/Logo_white.png";
-import AccountImage from "../images/profile_white.png";
+// import AccountImage from "../images/profile_white.png";
 import MobileMenu from "./MobileMenu";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
@@ -108,6 +108,7 @@ const Navbar = (props) => {
                 classNames="menu"
                 unmountOnExit>
                 <MobileMenu
+                    toggleMenu={toggleMenu}
                     toggleLogin={toggleLogin}
                     toggleSignUp={toggleSignUp}
                     activeIndex={props.activeIndex}

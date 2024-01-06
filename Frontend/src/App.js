@@ -12,6 +12,7 @@ import SignUp from "./pages/signup";
 import Forget from "./pages/forget";
 import OTP from "./pages/otp";
 import NewPass from "./pages/newpass";
+import Chat from "./pages/chat";
 
 import './App.css';
 
@@ -37,7 +38,7 @@ function App() {
         <Route path = "/pricing" element = {<Pricing navbarChange = {handleActiveIndexChange} />} />
         <Route path = "/about-us" element = {<About navbarChange = {handleActiveIndexChange}/>} />
         <Route path="/login" element={<Login />} />
-
+        <Route path="/chat" element={<Chat />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget" element={<Forget />} />
         <Route path="/otp" element={<OTP />} />
