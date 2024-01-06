@@ -5,7 +5,6 @@ import AOS from 'aos';
 import LogoWhite from "../images/logo/Logo_white.png";
 import videoSpeech from "../assets/videos/SpeechToText.mp4";
 import videoFormats from "../assets/videos/formats.mp4";
-import imageAI from "../images/2D architectura 1.png";
 import "../../node_modules/aos/dist/aos.css"
 
 function Home(props) {
@@ -106,7 +105,7 @@ function Home(props) {
             </div>
 
             <div className="w-[35vb] text-white text-md flex flex-col justify-center max-w-3xl text-left px-5 mt-10">
-                <img src={imageAI} alt='' className="w-md rounded-3xl mt-10 lg:scale-120 hover:-translate-y-10 hover:scale-125 lg:mb-10 ease-out duration-300" />
+                <img  alt='' className="w-md rounded-3xl mt-10 lg:scale-120 hover:-translate-y-10 hover:scale-125 lg:mb-10 ease-out duration-300" />
 
                 <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-5 ease-out duration-300">Try Now</button>
             </div>

@@ -8,9 +8,14 @@ import floorMapIcon from "../images/floor_plan_icon.png";
 import SendIcon from "../images/send.png";
 import MicIcon from "../images/mic.png";
 import LogoWhite from "../images/logo/Logo_white.png";
+import download from "../images/download_white.png";
+import pdf from "../images/pdf.svg";
 import axios from "axios";
 import { ReactSession } from "react-client-session";
 import { useEffect } from "react";
+import Pdf from "react-to-pdf";
+import { jsPDF } from "jspdf";
+import { createRef } from "react";
 
 const style_sent =
   "md:text-[1rem] text-sm font-normal bg-[rgb(0,0,255,0.05)] border-[1px] border-[#0000cc] filter backdrop-blur-xl text-white py-2 px-3 rounded-tl-3xl rounded-bl-3xl rounded-tr-3xl self-end max-w-[75%] text-right m-10";
@@ -111,6 +116,32 @@ const Chat = (props) => {
     console.log("audio");
   };
 
+  // add a download button to download the generated floor plan
+  const downloadFloorPlan = () => {
+    const img = document.getElementById("generated_floor_plan");
+    const link = document.createElement("a");
+    link.href = img.src;
+    link.download = "floor_plan.png";
+    link.click();
+  };
+
+  const downloadFloorPlanPDF = () => {
+    // convert image to pdf
+    const img = document.getElementById("generated_floor_plan");
+    const link = document.createElement("a");
+    link.href = img.src;
+
+    const pdfRef = createRef();
+    const options = {
+      orientation: "landscape",
+      unit: "px",
+      format: [img.width, img.height],
+    };
+    const pdf = new jsPDF(options);
+    pdf.addImage(img.src, "PNG", 0, 0);
+    pdf.save("floor_plan.pdf");
+  };
+
   return (
     <div className="flex flex-row flex-nowrap justify-center align-middle h-screen md:h-screen relative">
       <div
@@ -208,10 +239,23 @@ const Chat = (props) => {
               <img src={closeIcon} alt="close" className="w-12 h-12" />
             </button>
             <img
+              id="generated_floor_plan"
               src={plan1}
               className="fixed w-[75vmin] md:top-[12.5%] md:left-1/3 top-1/3 left-[12.5%]"
               alt="generated_floor_plan"
             />
+            <button
+              className="fixed bottom-5 right-5 border-0"
+              onClick={downloadFloorPlan}
+            >
+              <img src={download} alt="close" className="w-12 h-12" />
+            </button>
+            <button
+              className="fixed bottom-5 left-5 border-0"
+              onClick={downloadFloorPlanPDF}
+            >
+              <img src={pdf} alt="close" className="w-12 h-12" />
+            </button>
           </div>
         )}
       </div>
