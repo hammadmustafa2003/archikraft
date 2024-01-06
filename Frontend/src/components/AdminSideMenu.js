@@ -37,6 +37,8 @@ const AdminSideMenu = (props) => {
 
                     })}
                 </ul>
+                <button className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"> Log out </button>
+
                 <div className="flex flex-row flex-nowrap">
                     <img src={AccountImage} alt="Profile" className="w-7 h-7 mr-4" />
                     <span className="text-white text-xl overflow-clip line-clamp-1 max-w-[150px]"> John wick carter gale hale </span>
