@@ -7,6 +7,7 @@ import closeIcon from "../images/close.png";
 import floorMapIcon from "../images/floor_plan_icon.png";
 import SendIcon from "../images/send.png";
 import MicIcon from "../images/mic.png";
+import SearchIcon from "../images/search.png";
 import LogoWhite from "../images/logo/Logo_white.png";
 import download from "../images/download_white.png";
 import pdf from "../images/pdf.svg";
@@ -39,10 +40,11 @@ const Chat = (props) => {
 
   props.navbarChange(-1);
 
-  //   props.handleShowFooter(false);
 
   const [chats, setChats] = useState([]);
   const [message, setMessage] = useState("");
+  const [searchStr, setSearchStr] = useState("");
+
 
   // get previous chats from backend
   const getChats = () => {
@@ -110,6 +112,11 @@ const Chat = (props) => {
         console.log(err);
       });
   };
+
+  const searchMsg = (e) => { 
+    e.preventDefault();
+    console.log(searchStr);
+   }
 
   const parseAudio = (e) => {
     e.preventDefault();
@@ -189,6 +196,35 @@ const Chat = (props) => {
             </div>
           </Link>
 
+
+
+          <form
+            className="flex flex-row justify-center items-center space-x-2"
+            onSubmit={sendMsg}
+          >
+            <input
+              id="searchBox"
+              value={searchStr}
+              onChange={(e) => setSearchStr(e.target.value)}
+              type="text"
+              placeholder="Search"
+              className="w-full h-12 rounded-lg border-2 border-gray-300 p-2 bg-[rgb(255,255,255,0.3)] text-white focus:outline-none focus:shadow-outline m-5"
+            />
+
+            <button
+              type="submit"
+              className="bg-[rgb(0,255,0,0.05)] hover:bg-green-500 hover:-translate-y-1 hover:scale-105 ease-in duration-100 border-[1.5px] border-white hover:border-[#00cc00] p-2 rounded-lg"
+              onClick={(e) => {
+                sendMsg(e);
+              }}
+            >
+              <img src={SearchIcon} alt="send" className="w-10" />
+            </button>
+          </form>
+
+
+
+
           <div
             className="flex flex-col flex-grow space-y-5 mt-2 md:mt-5 mb-5 md:mb-10 overflow-y-auto scrollbar-hide"
             id="chatbox"
@@ -219,7 +255,7 @@ const Chat = (props) => {
               type="submit"
               className="bg-[rgb(0,255,0,0.05)] hover:bg-green-500 hover:-translate-y-1 hover:scale-105 ease-in duration-100 border-[1.5px] border-[#00cc00] p-2 rounded-lg"
               onClick={(e) => {
-                sendMsg(e);
+                searchMsg(e);
               }}
             >
               <img src={SendIcon} alt="send" className="w-10" />
