@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Typist from 'react-typist-component';
 import AOS from 'aos';
-
+import {Link} from "react-router-dom"
 import LogoWhite from "../images/logo/Logo_white.png";
 import videoSpeech from "../assets/videos/SpeechToText.mp4";
 import videoFormats from "../assets/videos/formats.mp4";
@@ -39,7 +39,9 @@ function Home(props) {
                     <Typist.Backspace count={100} typingDelay={25} />
                 </Typist>
 
-                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-3 ease-out duration-200">Try Now</button>
+                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-3 ease-out duration-200">
+                    <Link to="/login">Try Now</Link>
+                </button>
             </div>
         </div>
     );
@@ -66,7 +68,9 @@ function Home(props) {
                 <p className="text-lg lg:text-xl text-white mb-16 text-justify">
                     Simply speak your floorplan description into your microphone - no typing needed. Our speech recognition accurately transcribes your words into text. Describe room dimensions, features, and layouts naturally through voice commands. Our AI analyzes your spoken description to generate the floorplan.
                 </p>
-                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-5 ease-out duration-300">Try Now</button>
+                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-5 ease-out duration-300">
+                    <Link to="/login">Try Now</Link>
+                </button>
 
             </div>
         </div>
@@ -87,7 +91,9 @@ function Home(props) {
             <div className="w-[35vb] text-white text-md flex flex-col justify-center max-w-3xl text-left px-5 mt-10">
                 <video src={videoFormats} className="w-full rounded-full mt-10 hover:scale-125 hover:-translate-y-10 ease-out duration-300 mb-3" autoPlay loop muted />
                 <div className=" static top-0 -left-4 w-40 h-14 rounded-full bg-slate-900 self-center mix-blend-multiply filter blur-2xl mt-5 mb-10"></div>
-                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-5 ease-out duration-300">Try Now</button>
+                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-5 ease-out duration-300">
+                    <Link to="/login">Try Now</Link>
+                </button>
             </div>
         </div>
     );
@@ -107,7 +113,9 @@ function Home(props) {
             <div className="w-[35vb] text-white text-md flex flex-col justify-center max-w-3xl text-left px-5 mt-10">
                 <img  alt='' className="w-md rounded-3xl mt-10 lg:scale-120 hover:-translate-y-10 hover:scale-125 lg:mb-10 ease-out duration-300" />
 
-                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-5 ease-out duration-300">Try Now</button>
+                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 hover:scale-125 hover:-translate-y-5 ease-out duration-300">
+                    <Link to="/login">Try Now</Link>
+                </button>
             </div>
         </div>
     );
@@ -128,7 +136,9 @@ function Home(props) {
                         Instantly generate detailed 2D floorplans just by providing a natural language description - no more tedious drafting by hand!
                     </p>
 
-                    <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit lg:self-end hover:scale-125 hover:-translate-y-5 ease-out duration-300">Get Started</button>
+                    <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit lg:self-end hover:scale-125 hover:-translate-y-5 ease-out duration-300">
+                        <Link to="/login">Get Started</Link>
+                    </button>
                 </div>
             </div>
 

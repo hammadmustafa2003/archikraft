@@ -9,28 +9,28 @@ const Footer = () => {
                     <div className="flex flex-col">
                         <h4 className='text-white text-md mb-5'>Company</h4>
                         <ul className="flex flex-col text-blue-500 text-sm underline gap-2">
-                            <li><Link href="/">Home</Link></li>
-                            <li><Link href="/our-vision">Our Vision</Link></li>
-                            <li><Link href="/pricing">Pricing</Link></li>
-                            <li><Link href="/about-us">About Us</Link></li>
+                            <li><Link to="/">Home</Link></li>
+                            <li><Link to="/our-vision">Our Vision</Link></li>
+                            <li><Link to="/pricing">Pricing</Link></li>
+                            <li><Link to="/about-us">About Us</Link></li>
                         </ul>
                     </div>
                     <div className="flex flex-col">
                         <h4 className="text-white text-md mb-5">Get help</h4>
                         <ul className="flex flex-col text-blue-500 text-sm underline gap-2">
-                            <li><Link href="/">FAQs</Link></li>
-                            <li><Link href="/our-vision">Privacy Policy</Link></li>
-                            <li><Link href="/pricing">Pricing</Link></li>
-                            <li><Link href="/about-us">About Us</Link></li>
+                            <li><Link to="https://docs.google.com/document/d/1gXNSG-kXP4VLjkGacph_YXSREvOVa8z-Alt1J50t0i0/edit?usp=sharing">FAQs</Link></li>
+                            <li><Link to="https://docs.google.com/document/d/1QeLo600xPTFKcGaODAugBVEKmncPVoddRFsDtLZtORY/edit?usp=sharing">Privacy Policy</Link></li>
+                            <li><Link to="/pricing">Pricing</Link></li>
+                            <li><Link to="/about-us">About Us</Link></li>
                         </ul>
                     </div>
                     <div className="flex flex-col">
                         <h4 className='text-white text-md mb-5'>Follow Us</h4>
                         <ul className="flex flex-col text-blue-500 text-sm underline gap-2">
-                            <li><Link href="/">Facebook</Link></li>
-                            <li><Link href="/our-vision">Twitter</Link></li>
-                            <li><Link href="/pricing">Instagram</Link></li>
-                            <li><Link href="/about-us">Linkedin</Link></li>
+                            <li><Link to="https://www.facebook.com/">Facebook</Link></li>
+                            <li><Link to="https://twitter.com/">Twitter</Link></li>
+                            <li><Link to="https://www.instagram.com/">Instagram</Link></li>
+                            <li><Link to="https://www.linkedin.com/">Linkedin</Link></li>
                         </ul>
                     </div>
                 </div>
