@@ -1,6 +1,11 @@
 import AccountImage from "../images/profile_white.png";
 import menuIcon from "../images/menu.png";
 import closeIcon from "../images/close.png";
+import { ReactSession } from "react-client-session";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+
 
 const ChatHistory = (props) => {
 
@@ -25,10 +30,25 @@ const ChatHistory = (props) => {
                     ))}
                 </ul>
                 <button className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"> Create new plan </button>
+                <button className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"
+                    onClick={() => {
+                        window.location.href = "/news";
+                    }}
+                > News </button>
+
                 <div className="flex flex-row flex-nowrap">
-                    <img src={AccountImage} alt="Profile" className="w-7 h-7 mr-4"/>
-                    <span className="text-white text-xl overflow-clip line-clamp-1 max-w-[150px]"> John wick carter gale hale </span>
-                    <button><img src={menuIcon} alt="Profile" className="w-7 h-7 mx-4"/></button>
+                    <a href="/profile">
+                        <img src={AccountImage} alt="Profile" className="w-7 h-7 mr-4" />
+                    </a>
+
+                    <a href="/profile">
+                        <span className="text-white text-xl overflow-clip line-clamp-1 max-w-[150px]">{ReactSession.get("name")}</span>
+                    </a>
+                    <button
+                        onClick={() => {
+                            window.location.href = "/profile";
+                        }}
+                    ><img src={menuIcon} alt="Profile" className="w-7 h-7 mx-4" /></button>
                 </div>
             </div>
         </div>

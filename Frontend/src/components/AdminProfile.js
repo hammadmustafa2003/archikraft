@@ -1,16 +1,18 @@
 import React from 'react';
 import AccountImage from "../images/profile_white.png";
+import { ReactSession } from "react-client-session";
+import { useEffect, useState } from "react";
 
 
 const AdminProfile = () => {
     const user_details = {
         profile_image: AccountImage,
-        username: 'admin',
-        name: 'John Doe',
-        email: 'johndoe@example.com',
-        phone_number: '1234567890',
+        username: ReactSession.get("username"),
+        name: ReactSession.get("name"),
+        email: ReactSession.get("email"),
+        phone_number: ReactSession.get("phone"),
         role: 'Admin',
-        country: 'United States',
+        country: ReactSession.get("country")
     };
 
     return (

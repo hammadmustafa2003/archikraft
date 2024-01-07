@@ -26,11 +26,34 @@ const Footer = () => {
                     </div>
                     <div className="flex flex-col">
                         <h4 className='text-white text-md mb-5'>Follow Us</h4>
-                        <ul className="flex flex-col text-blue-500 text-sm underline gap-2">
-                            <li><Link to="https://www.facebook.com/">Facebook</Link></li>
+                        <ul className="flex flex-row text-blue-500 text-sm underline gap-2">
+                            {/* <li><Link to="https://www.facebook.com/">Facebook</Link></li>
                             <li><Link to="https://twitter.com/">Twitter</Link></li>
                             <li><Link to="https://www.instagram.com/">Instagram</Link></li>
-                            <li><Link to="https://www.linkedin.com/">Linkedin</Link></li>
+                            <li><Link to="https://www.linkedin.com/">Linkedin</Link></li> */}
+                            {/* Add Icons of social media */}
+                            <li>
+                                <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">
+                                    <img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" alt="facebook" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/" target="_blank" rel="noreferrer">
+                                    <img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="twitter" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">
+                                    <img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="instagram" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">
+                                    <img src="https://img.icons8.com/fluent/48/000000/linkedin.png" alt="linkedin" />
+                                </a>
+                            </li>
+
+                            
                         </ul>
                     </div>
                 </div>

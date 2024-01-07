@@ -48,7 +48,16 @@ const Login = () => {
           // session
           ReactSession.set("username", user.username);
           ReactSession.set("email", user.email);
-          window.location.href = "/chat";
+          ReactSession.set("name", user.name);
+          ReactSession.set("phone", user.phone);
+          ReactSession.set("country", user.country);
+          ReactSession.set("role", user.role);
+
+          if (user.role === "admin") {
+            window.location.href = "/admin";
+          } else {
+            window.location.href = "/chat";
+          }
         } else if (response.status == 400) {
           document.getElementById("error").innerHTML =
             "<p class='text-red-400 text-md italic'>Invalid email or password.</p>";

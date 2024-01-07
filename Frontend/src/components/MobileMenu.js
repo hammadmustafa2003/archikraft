@@ -1,4 +1,6 @@
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { ReactSession } from "react-client-session";
+
 
 const MobileMenu = (props) => {
 
@@ -25,7 +27,7 @@ const MobileMenu = (props) => {
                     </center>
 
                     <div className="flex items-center justify-center">
-                                <button
+                                {/* <button
                                     class="flex md:hidden text-xl bg-blue-500 hover:scale-110 p-3 text-white rounded-md mr-5"
                                     onClick={props.toggleLogin}>
                                     Login
@@ -34,7 +36,47 @@ const MobileMenu = (props) => {
                 <button class="flex md:hidden text-xl bg-white hover:-translate-y-1 p-3 text-blue-500 rounded-md"
                 onClick={props.toggleSignUp}>
                                     Sign Up
-                                </button>
+                                </button> */}
+                                {
+                                    ReactSession.get("username") === null ?
+                                        <div className="flex">
+                                            <button
+                                                className="flex md:hidden transition ease-in-out delay-50 border-2 border-white bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-white  hover:text-blue-500 duration-150 p-2 text-white rounded-md mr-5"
+                                                onClick={props.toggleLogin}>
+                                                Login
+                                            </button>
+
+                                            <button className="flex md:hidden transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md"
+                                                onClick={props.toggleSignUp}>
+                                                Sign Up
+                                            </button>
+                                        </div>
+                                        :
+                                        <div className="flex">
+                                            <button
+                                                className="flex md:hidden transition ease-in-out delay-50 border-2 border-white bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-white  hover:text-blue-500 duration-150 p-2 text-white rounded-md mr-5"
+                                                onClick={() => {
+                                                    window.location.href = "/account";
+                                                }}
+                                            >
+                                                Profile
+                                            </button>
+
+                                            <button className="flex md:hidden transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md"
+                                                onClick={() => {
+                                                    ReactSession.set("username", null);
+                                                    ReactSession.set("name", null);
+                                                    ReactSession.set("email", null);
+                                                    ReactSession.set("phone", null);
+                                                    ReactSession.set("country", null);
+                                                    ReactSession.set("role", null);
+                                                    window.location.href = "/";
+                                                }}
+                                            >
+                                                Logout
+                                            </button>
+                                        </div>
+                                }
                     </div>
                 </div>
     )

@@ -1,26 +1,55 @@
 import React, { useState } from 'react';
-const news_temp = [
-    {id:0, text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget ultricies ultrices, nunc nisl aliquam nunc, vitae aliquam nisl nunc eu nisl."},
-    {id:1, text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget ultricies ultrices, nunc nisl aliquam nunc, vitae aliquam nisl nunc eu nisl."},
-    {id:2, text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget ultricies ultrices, nunc nisl aliquam nunc, vitae aliquam nisl nunc eu nisl."},
-    {id:3, text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget ultricies ultrices, nunc nisl aliquam nunc, vitae aliquam nisl nunc eu nisl."},
-    {id:4, text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget ultricies ultrices, nunc nisl aliquam nunc, vitae aliquam nisl nunc eu nisl."}
-];
+import { Route, Routes } from 'react-router-dom';
+import { ReactSession } from 'react-client-session';
+import { useEffect } from 'react';
+import axios from "axios";
+
+
+
 const AdminPostNews = () => {
     const [newsText, setNewsText] = useState('');
-    const [newses, setNews] = useState(news_temp);
+    const [newses, setNews] = useState([]);
+
+    useEffect(() => {
+        getNews();
+    }, []);
+
+
+    const getNews = () => {
+        try {
+            axios.get("http://localhost:5000/getNews")
+                .then((response) => {
+                    setNews(response.data.news);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
 
 
     const handlePost = () => {
-        setNews(prevNews => {
-            // debugger;
-            const updatedNewslen = prevNews.push({id:-1, text:newsText});
-            setNews(prevNews);
-            setNewsText('');
-            // TODO: Logic to add news to database
-            return prevNews;
-        });
+        const text = newsText;
+        console.log(text);
+        try {
+            axios.get("http://localhost:5000/addNews", {
+                params: {
+                    text: text,
+                }
+            })
+                .then((response) => {
+                    console.log(response);
+                    setNewsText('');
+                    getNews();
+                });
+            
+            
+        } catch (error) {
+            console.log(error);
+        }
     };
+    
 
     const handleDeleteNews = (id) => {
         setNews(prevNews => {
@@ -48,7 +77,6 @@ const AdminPostNews = () => {
                         <tr className="border-b-2 border-blue-600 text-blue-500 text-xl font-black m-3">
                             <th className='p-3 font-black'>Id</th>
                             <th className='p-3 font-black'>Text</th>
-                            <th className='p-3 font-black'></th>
                         </tr>
                 </thead>
                 <tbody>
@@ -56,16 +84,8 @@ const AdminPostNews = () => {
                     {newses.map((news, index) => (
                         
                         <tr key={news.id} className=" text-white text-lg m-3">
-                            <td className='p-3'>{news.id}</td>
+                            <td className='p-3'>{index+1}</td>
                             <td className='p-3'>{news.text}</td>
-                            <td>
-                                <button
-                                    className="rounded-md bg-red-500 hover:bg-red-600 text-white px-2 py-1"
-                                    onClick={() => handleDeleteNews(news.id)}
-                                >
-                                    Delete
-                                </button>
-                            </td>
                         </tr>
                     ))}
                 </tbody>

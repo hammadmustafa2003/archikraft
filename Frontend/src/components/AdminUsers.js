@@ -1,42 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCountries } from "use-react-countries";
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput from 'react-phone-number-input';
+import axios from "axios";
+import { ReactSession } from "react-client-session";
+import { sha256 } from "js-sha256";
 
 
-
-var user_temp = [
-    {
-        id: 1,
-        username: 'abc',
-        country: 'Pakistan',
-        isAdmin: true,
-    },
-    {
-        id: 2,
-        username: 'def',
-        country: 'Pakistan',
-        isAdmin: false, 
-    },
-    {
-        id: 3,
-        username: 'ghi',
-        country: 'Pakistan',
-        isAdmin: false,
-    },
-    {
-        id: 4,
-        username: 'ghijkl',
-        country: 'Pakistan',
-        isAdmin: false,
-    }
-];
 
 const AdminUsers = () => {
 
 
     const [visibleCreateUser, setVisibleCreateUser] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [users, setUsers] = useState(user_temp);
+    const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const createFormRef = useRef(null);
 
@@ -76,7 +52,29 @@ const AdminUsers = () => {
     
         const handleRoleChange = (event) => {
             setRole(event.target.value);
-        };
+    };
+    
+
+    // get all users from backend
+    useEffect(() => {
+        try {
+            // get users from backend
+            axios
+                .get("http://localhost:5000/getUsers")
+                .then((response) => {
+                    // console.log(response.data);
+                    setUsers(response.data.users);
+                    setFilteredUsers(response.data.users);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
+
+        
 
 
     //--------------------------------------Form--------------------------------------//
@@ -95,13 +93,6 @@ const AdminUsers = () => {
     };
 
     useEffect(() => {
-        const filteredUsers_temp = user_temp.filter(user =>
-            user.username.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredUsers(filteredUsers_temp);
-    }, [searchTerm]);
-
-    useEffect(() => {
         if (visibleCreateUser) {
             document.addEventListener('mousedown', handleOutsideClick);
             document.addEventListener('keydown', handleKeyPress);
@@ -116,49 +107,113 @@ const AdminUsers = () => {
     
     const handleSearch = e => {
         setSearchTerm(e.target.value);
+
+        // Filter users based on search term
+        const filteredUsers = users.filter(user => {
+            return user.username.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+        setFilteredUsers(filteredUsers);
+        if (searchTerm === '') {
+            setFilteredUsers(users);
+        }
+
+        // display users in table
+        const table = document.getElementById('users');
+        const rows = table.getElementsByTagName('tr');
+        for (let i = 0; i < rows.length; i++) {
+            const td = rows[i].getElementsByTagName('td')[0];
+            if (td) {
+                const txtValue = td.textContent || td.innerText;
+                if (txtValue.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+
+
     };
 
     const handleCreateUser = () => {
-        setUsers(prevUsers => {
-            const updatedUserslen = prevUsers.push({
-                    id: -1,
-                    username: username,
-                    country: country,
-                    isAdmin: false,
-                }
-            );
-            setFilteredUsers(prevUsers);
-    
-            // TODO: Logic to delete a user in the database
-            return prevUsers;
-        });
+        // check all fields are filled
+    if (
+      email === "" ||
+      password === "" ||
+      username === "" ||
+      name === "" ||
+      confirmPassword === ""
+    ) {
+      document.getElementById("error").innerHTML =
+        "<p class='text-red-500 text-md italic'>Please fill all fields</p>";
+      setTimeout(() => {
+        document.getElementById("error").innerHTML = "";
+      }, 3000);
+      return;
+    }
+
+    // encrypt password
+    const pass = sha256(password);
+    const confpass = sha256(confirmPassword);
+
+    const payload = {
+      email,
+      password: pass,
+      username,
+      name,
+      confirmPassword: confpass,
+      role,
+      country,
+      phoneNumber,
     };
 
-    const handleDeleteUser = async userId => {
-        setUsers(prevUsers => {
-            const updatedUsers = prevUsers.filter(user => user.id !== userId);
-            setFilteredUsers(updatedUsers);
-    
-            // TODO: Logic to delete a user in the database
-            return updatedUsers;
-        });
+    axios
+      .post("http://localhost:5000/signup", payload)
+      .then((response) => {
+        // if response is 200, print 'message' in error div and clear form
+        // if response is 400, print 'error' in error div
+        // if response is 500, print 'error' in error div
+
+        if (response.status === 200) {
+          
+          setEmail("");
+          setPassword("");
+          setUsername("");
+          setName("");
+          setConfirmPassword("");
+          setRole("architect");
+          setCountry("Pakistan");
+          setPhoneNumber("+923164117090");
+          
+          // redirect to login page
+          window.location.href = "/login";
+        } else if (response.status === 400) {
+          console.log(response.data.error);
+        } else if (response.status === 500) {
+          console.log(response.data.error);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     };
 
-    const handleToggleAdmin = userId => {
-
-        setUsers(prevUsers => {
-            const updatedUsers = prevUsers.map(user => {
-                if (user.id === userId) {
-                    user.isAdmin = !user.isAdmin;
-                }
-                return user;
-            });
-            setFilteredUsers(updatedUsers);
-    
-            // TODO: Logic to toggle the admin status of a user in database
-            return updatedUsers;
-        });
-
+    const handleDeleteUser = async username => {
+        console.log(username);
+        // delete user from backend
+        try {
+            const payload = {
+                username
+            };
+            await axios.post("http://localhost:5000/deleteUser", payload);
+            // refresh page
+            window.location.reload();
+            
+        }
+        catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -180,29 +235,29 @@ const AdminUsers = () => {
                     className="border border-gray-300 rounded-md px-4 py-2 mb-4"
                 />
 
-                <table>
+                <table id="users">
                     <thead>
                         <tr className="border-b-2 border-blue-600 text-blue-500 text-xl font-black m-3">
                             <th className='p-3 font-black'>Username</th>
+                            <th className='p-3 font-black'>Name</th>
                             <th className='p-3 font-black'>Country</th>
-                            <th className='p-3 font-black'>Admin</th>
+                            <th className='p-3 font-black'>Phone</th>
+                            <th className='p-3 font-black'>Role</th>
                             <th className='p-3 font-black'></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUsers.map((user,index) => (
+                        {users.map((user,index) => (
                             <tr key={user.id} className=" text-white text-lg m-3">
                                 <td className='p-3'>{user.username}</td>
-                                <td>{user.country}</td>
-                                <td>
-                                    <input type='checkbox' 
-                                    checked={user.isAdmin}
-                                    onChange={() => handleToggleAdmin(user.id)}
-                                    /></td>
+                                <td className='p-3'>{user.name}</td>
+                                <td className='p-3'>{user.country}</td>
+                                <td className='p-3'>{user.phone}</td>
+                                <td className='p-3'>{user.role}</td>
                                 <td>
                                     <button
                                         className="rounded-md bg-red-500 hover:bg-red-600 text-white px-2 py-1"
-                                        onClick={() => handleDeleteUser(user.id)}
+                                        onClick={() => handleDeleteUser(user.username)}
                                     >
                                         Delete
                                     </button>

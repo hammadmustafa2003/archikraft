@@ -6,6 +6,8 @@ import LogoWhite from "../images/logo/Logo_white.png";
 import MobileMenu from "./MobileMenu";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
+import { ReactSession } from "react-client-session";
+
 
 const Navbar = (props) => {
     const menuOptions = [
@@ -63,7 +65,7 @@ const Navbar = (props) => {
                             ))}
                         </ul>
                     </div>
-                    <div className="flex">
+                    {/* <div className="flex">
                         <Container>
                         <button
                             className="hidden md:flex transition ease-in-out delay-50 border-2 border-white bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-white  hover:text-blue-500 duration-150 p-2 text-white rounded-md mr-5"
@@ -78,7 +80,55 @@ const Navbar = (props) => {
                             Sign Up
                             </button>
                         </Container>
-                    </div>
+                    </div> */}
+                    {
+                        ReactSession.get("username") === null ?
+                            <div className="flex">
+                                <Container>
+                                    <button
+                                        className="hidden md:flex transition ease-in-out delay-50 border-2 border-white bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-white  hover:text-blue-500 duration-150 p-2 text-white rounded-md mr-5"
+                                        onClick={toggleLogin}>
+                                        Login
+                                    </button>
+                                </Container>
+
+                                <Container>
+                                    <button className="hidden md:flex transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md"
+                                        onClick={toggleSignUp}>
+                                        Sign Up
+                                    </button>
+                                </Container>
+                            </div>
+                            :
+                            <div className="flex">
+                                <Container>
+                                    <button
+                                    className="hidden md:flex transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md mr-5"
+                                        onClick={() => {
+                                            window.location.href = "/profile";
+                                        }}>
+                                        Profile
+                                    </button>
+                                </Container>
+
+                                <Container>
+                                    <button
+                                        className="hidden md:flex transition ease-in-out delay-50 border-2 border-white bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-white  hover:text-blue-500 duration-150 p-2 text-white rounded-md mr-5"
+                                        onClick={() => {
+                                            ReactSession.set("username", null);
+                                            ReactSession.set("name", null);
+                                            ReactSession.set("email", null);
+                                            ReactSession.set("phone", null);
+                                            ReactSession.set("country", null);
+                                            ReactSession.set("role", null);
+                                            window.location.href = "/";
+                                        }
+                                        }>
+                                        Logout
+                                    </button>
+                                </Container>
+                            </div>
+                    }
 
                     {/* Mobile Menu Button (Hamburger) */}
                     <div className="md:hidden">

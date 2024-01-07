@@ -40,11 +40,9 @@ const Chat = (props) => {
 
   props.navbarChange(-1);
 
-
   const [chats, setChats] = useState([]);
   const [message, setMessage] = useState("");
   const [searchStr, setSearchStr] = useState("");
-
 
   // get previous chats from backend
   const getChats = () => {
@@ -113,10 +111,36 @@ const Chat = (props) => {
       });
   };
 
-  const searchMsg = (e) => { 
+  const searchMsg = (e) => {
     e.preventDefault();
-    console.log(searchStr);
-   }
+    // search for message in chats
+    if (searchStr === "") {
+      // change placeholder to "Please enter a message" for 2 seconds
+      const temp = document.getElementById("searchBox");
+      temp.placeholder = "Please enter a message";
+      temp.className =
+        "w-full h-12 rounded-lg border-2 border-red-500 p-2 bg-[rgb(255,255,255,0.3)] text-white focus:outline-none focus:shadow-outline m-5";
+      setTimeout(() => {
+        temp.placeholder = "Search";
+        temp.className =
+          "w-full h-12 rounded-lg border-2 border-gray-300 p-2 bg-[rgb(255,255,255,0.3)] text-white focus:outline-none focus:shadow-outline m-5";
+      }, 3000);
+      return;
+    }
+    const chatbox = document.getElementById("chatbox");
+    chatbox.innerHTML = "";
+    chats.forEach((chat) => {
+      if (chat.message.includes(searchStr)) {
+        const div = document.createElement("div");
+        div.className = `${
+          chat.sender === ReactSession.get("email") ? style_sent : style_recv
+        }`;
+        div.innerHTML = chat.message;
+        chatbox.appendChild(div);
+      }
+    });
+    chatbox.scrollTop = chatbox.scrollHeight;
+  };
 
   const parseAudio = (e) => {
     e.preventDefault();
@@ -196,11 +220,9 @@ const Chat = (props) => {
             </div>
           </Link>
 
-
-
           <form
             className="flex flex-row justify-center items-center space-x-2"
-            onSubmit={sendMsg}
+            onSubmit={searchMsg}
           >
             <input
               id="searchBox"
@@ -214,16 +236,10 @@ const Chat = (props) => {
             <button
               type="submit"
               className="bg-[rgb(0,255,0,0.05)] hover:bg-green-500 hover:-translate-y-1 hover:scale-105 ease-in duration-100 border-[1.5px] border-white hover:border-[#00cc00] p-2 rounded-lg"
-              onClick={(e) => {
-                sendMsg(e);
-              }}
             >
               <img src={SearchIcon} alt="send" className="w-10" />
             </button>
           </form>
-
-
-
 
           <div
             className="flex flex-col flex-grow space-y-5 mt-2 md:mt-5 mb-5 md:mb-10 overflow-y-auto scrollbar-hide"

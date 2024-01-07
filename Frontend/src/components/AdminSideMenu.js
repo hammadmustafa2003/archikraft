@@ -1,6 +1,8 @@
 import AccountImage from "../images/profile_white.png";
 import menuIcon from "../images/menu.png";
 import closeIcon from "../images/close.png";
+import { ReactSession } from "react-client-session";
+import { useEffect, useState } from "react";
 
 const AdminSideMenu = (props) => {
 
@@ -37,11 +39,22 @@ const AdminSideMenu = (props) => {
 
                     })}
                 </ul>
-                <button className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"> Log out </button>
+                <button className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"
+                    onClick={() => {
+                        ReactSession.set("username", null);
+                        ReactSession.set("name", null);
+                        ReactSession.set("email", null);
+                        ReactSession.set("phone", null);
+                        ReactSession.set("country", null);
+                        ReactSession.set("role", null);
+                        window.location.href = "/";
+                    }
+                    }
+                > Log out </button>
 
                 <div className="flex flex-row flex-nowrap">
                     <img src={AccountImage} alt="Profile" className="w-7 h-7 mr-4" />
-                    <span className="text-white text-xl overflow-clip line-clamp-1 max-w-[150px]"> John wick carter gale hale </span>
+                    <span className="text-white text-xl overflow-clip line-clamp-1 max-w-[150px]">{ ReactSession.get("name") }</span>
                     <button><img src={menuIcon} alt="Profile" className="w-7 h-7 mx-4" /></button>
                 </div>
             </div>

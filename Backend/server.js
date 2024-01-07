@@ -287,6 +287,145 @@ app.get('/getMessages', async (req, res) => {
   }
 });
 
+app.get('/getUsers', async (req, res) => {
+  try {
+    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/get-all-users';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '890'
+    };
+    const response = await axios.get(apiUrl, {
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 400) {
+      res.status(400).json({ error: detail });
+    }
+    else if (status_code == 200) {
+      res.status(200).json({ message: detail, users: response.data.users });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during getting users' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during getting users' });
+  }
+}
+);
+
+app.post('/deleteUser', async (req, res) => {
+  try {
+    const { username } = req.body;
+    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/delete-user';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '901'
+    };
+    const response = await axios.delete(apiUrl, {
+      params: {
+        username: username
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 400) {
+      res.status(400).json({ error: detail });
+    }
+    else if (status_code == 200) {
+      res.status(200).json({ message: detail });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during deleting user' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during deleting user' });
+  }
+}
+);
+
+app.get('/addNews', async (req, res) => {
+  try {
+    const { text } = req.query;
+    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/add-news';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '678'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        text: text,
+        timestamp: new Date()
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during adding news' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during adding news' });
+  }
+}
+);
+
+app.get('/getNews', async (req, res) => {
+  try {
+    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/get-news';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '123'
+    };
+    const response = await axios.get(apiUrl, {
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail, news: response.data.news });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during getting news' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during getting news' });
+  }
+}
+);
+
+app.post('/deleteNews', async (req, res) => {
+  try {
+    const { id } = req.body;
+    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/delete-news';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '234'
+    };
+    const response = await axios.delete(apiUrl, {
+      params: {
+        id: id
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during deleting news' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during deleting news' });
+  }
+}
+);
+
 
 
 dotenv.config();
