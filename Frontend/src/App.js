@@ -16,8 +16,7 @@ import OTP from "./pages/otp";
 import NewPass from "./pages/newpass";
 import Chat from "./pages/chat";
 import Admin from "./pages/admin";
-
-
+import News from "./pages/news";
 import './App.css';
 
 
@@ -45,7 +44,9 @@ const ProtectedURL = (activeIndex, handleActiveIndexChange) => {
         <Route path="/otp" element={<OTP />} />
         <Route path="/newpass" element={<NewPass />} />
         <Route path="/admin" element={<Admin navbarChange={handleActiveIndexChange} />} />
-        </Routes>
+        <Route path="/news" element={<News navbarChange={handleActiveIndexChange} />} />
+
+      </Routes>
 
               {activeIndex !== -1 && <Footer />}
 
@@ -74,6 +75,7 @@ const ProtectedURL = (activeIndex, handleActiveIndexChange) => {
         <Route path="/newpass" element={<NewPass />} />
         <Route path="/admin" element={<Admin navbarChange={handleActiveIndexChange} />} />
         <Route path="/chat" element={<Chat navbarChange={handleActiveIndexChange} />} />
+
         </Routes>
 
               {activeIndex !== -1 && <Footer />}
