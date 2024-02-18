@@ -11,7 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.1.3",
+    "@sfpy/node-sdk": "^3.0.1",
     "axios": "^1.6.5",
+    "bsecure": "^1.0.7",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",

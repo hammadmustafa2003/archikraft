@@ -63,8 +63,10 @@ const AdminUsers = () => {
                 .get("http://localhost:5000/getUsers")
                 .then((response) => {
                     // console.log(response.data);
-                    setUsers(response.data.users);
-                    setFilteredUsers(response.data.users);
+                    // remove admins
+                    const filteredUsers = response.data.users.filter(user => user.role !== 'admin');
+                    setUsers(filteredUsers);
+                    setFilteredUsers(filteredUsers);
                 })
                 .catch((error) => {
                     console.log(error);

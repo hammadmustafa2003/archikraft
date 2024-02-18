@@ -2,10 +2,13 @@ import React, { useEffect } from 'react';
 import AOS from 'aos';
 import "../../node_modules/aos/dist/aos.css"
 
+
 const blockMaker = (title, monthlyPrice, annualPrice, features) => {
     const featureList = features.map((feature, index) => (
         <li key={index} className="text-md lg:text-lg text-white mb-2">{feature}</li>
     ));
+
+        
 
     return (
         <div data-aos="zoom-in" data-aos-duration='1000' data-aos-easing="ease-out-quart">
@@ -14,7 +17,12 @@ const blockMaker = (title, monthlyPrice, annualPrice, features) => {
                 <span className=" text-xs lg:text-xs font-light mb-3 text-white">Annually charged ${annualPrice}</span>
                 <h1 className="text-3xl lg:text-5xl font-black mb-3 bg-gradient-to-tr from-teal-300 via-blue-600 to-purple-400 inline-block text-transparent bg-clip-text">{title}</h1>
                 <ul className="list-disc">{featureList}</ul>
-                <button className="bg-indigo-500 text-white px-4 py-3 rounded-md hover:bg-indigo-600 w-fit self-center mt-5 scale-125 hover:scale-150 hover:-translate-y-5 ease-out duration-300">Buy Now</button>
+                <div className="flex flex-col items-center justify-center mt-5">
+                    <button className="bg-gradient-to-tr from-teal-300 via-blue-600 to-purple-400 text-white font-bold py-2 px-4 rounded-full">
+                        Subscribe
+                    </button>
+                    <span className="text-xs lg:text-xs font-light mt-3 text-white">*All prices are in USD</span>
+                    </div>
             </div>
         </div>
     )
@@ -29,6 +37,7 @@ const Pricing = (props) => {
             once: true,
         });
     }, []);
+
 
 
     return (

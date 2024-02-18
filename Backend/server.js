@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 app.post('/signup', async (req, res) => {
   try {
     const { email, password, username, name, confirmPassword, role, country, phoneNumber } = req.body;
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/add-user';
+    const apiUrl = 'http://68.183.94.49:8888/add-user';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '537'
@@ -53,7 +53,7 @@ app.post('/signup', async (req, res) => {
       headers: headers
     });
     console.log(response.data);
-    let {status_code, detail} = response.data;
+    let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
     }
@@ -71,7 +71,7 @@ app.post('/signup', async (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/login-user';
+    const apiUrl = 'http://68.183.94.49:8888/login-user';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '345'
@@ -86,7 +86,7 @@ app.post('/login', async (req, res) => {
       headers: headers
     });
     console.log(response.data);
-    let {status_code, detail} = response.data;
+    let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
     }
@@ -105,7 +105,7 @@ app.post('/login', async (req, res) => {
 app.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/get-user-by-email';
+    const apiUrl = 'http://68.183.94.49:8888/get-user-by-email';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '456'
@@ -123,7 +123,7 @@ app.post('/forgot-password', async (req, res) => {
     }
     else if (status_code == 200) {
       const otp = getOTP();
-      const apiUrl = 'https://moose-glad-squid.ngrok-free.app/send-email';
+      const apiUrl = 'http://68.183.94.49:8888/send-email';
       const response = await axios.get(apiUrl, {
         params: {
           email: email,
@@ -155,7 +155,7 @@ app.post('/forgot-password', async (req, res) => {
 app.post('/reset-password', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/update-password';
+    const apiUrl = 'http://68.183.94.49:8888/update-password';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '567'
@@ -201,7 +201,7 @@ app.post('/saveMessage', async (req, res) => {
     const { message, sender } = req.body;
     const answer = await generateContent(message);
     console.log("Answer: ", answer);
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/save-message';
+    const apiUrl = 'http://68.183.94.49:8888/save-message';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '678'
@@ -222,7 +222,7 @@ app.post('/saveMessage', async (req, res) => {
     }
     else if (status_code == 200) {
       // save gemini's answer
-      const apiUrl = 'https://moose-glad-squid.ngrok-free.app/save-message';
+      const apiUrl = 'http://68.183.94.49:8888/save-message';
       // add ngrok-skip-browser-warning in header
       const headers = {
         'ngrok-skip-browser-warning': '678'
@@ -255,12 +255,12 @@ app.post('/saveMessage', async (req, res) => {
     res.status(500).json({ error: 'An error occurred during saving message' });
   }
 });
-    
+
 
 app.get('/getMessages', async (req, res) => {
   try {
     const { user } = req.query;
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/get-messages';
+    const apiUrl = 'http://68.183.94.49:8888/get-messages';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '789'
@@ -289,7 +289,7 @@ app.get('/getMessages', async (req, res) => {
 
 app.get('/getUsers', async (req, res) => {
   try {
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/get-all-users';
+    const apiUrl = 'http://68.183.94.49:8888/get-all-users';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '890'
@@ -317,7 +317,7 @@ app.get('/getUsers', async (req, res) => {
 app.post('/deleteUser', async (req, res) => {
   try {
     const { username } = req.body;
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/delete-user';
+    const apiUrl = 'http://68.183.94.49:8888/delete-user';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '901'
@@ -348,7 +348,7 @@ app.post('/deleteUser', async (req, res) => {
 app.get('/addNews', async (req, res) => {
   try {
     const { text } = req.query;
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/add-news';
+    const apiUrl = 'http://68.183.94.49:8888/add-news';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '678'
@@ -376,7 +376,7 @@ app.get('/addNews', async (req, res) => {
 
 app.get('/getNews', async (req, res) => {
   try {
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/get-news';
+    const apiUrl = 'http://68.183.94.49:8888/get-news';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '123'
@@ -401,7 +401,7 @@ app.get('/getNews', async (req, res) => {
 app.post('/deleteNews', async (req, res) => {
   try {
     const { id } = req.body;
-    const apiUrl = 'https://moose-glad-squid.ngrok-free.app/delete-news';
+    const apiUrl = 'http://68.183.94.49:8888/delete-news';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '234'
@@ -427,7 +427,6 @@ app.post('/deleteNews', async (req, res) => {
 );
 
 
-
 dotenv.config();
 
 // 1. Configuration
@@ -437,10 +436,58 @@ const generationConfig = { temperature: 0.9, topP: 1, topK: 1, maxOutputTokens: 
 // 2. Initialise Model
 const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig });
 
+
 // 3. Generate Content
-async function generateContent(message) {  
+async function generateContent(message) {
+  const str = `Input: {user_prompt}
+      old_feature_vector:{
+            'Number of Living Rooms': 2, 
+                  'Number of Kitchens': 1, 
+                  'Number of Bathrooms': 2, 
+                  'Number of Dining Rooms': -1, 
+                  'Nmumber of Children Rooms': -1, 
+                  'Number of Study Rooms': -1, 
+                  'Number of Balconies': -1, 
+                  'Number of Storage Rooms': -1, 
+                  'Width to Length Ratio of Land Plot': -1, 
+                  'Maximum Length of Bedroom': -1, 
+                  'Minimum Length of Bedroom': -1, 
+                  'Maximum Width of Bedroom': -1,
+                  'Minimum Width of Bedroom': -1, 
+                  'Front Door Location X-axis': -1, 
+                  'Front Door Location Y-axis': -1,
+                  'Number of Bedrooms': 1
+      }
+
+      Extract the information for the feature vector from the input then output in the following format. The feature vector should only have integers or floats in the value of key-value pairs of feature vector. If an information is not found replace it with -1.
+
+      Feature vector:{
+            'Number of Living Rooms', 
+                  'Number of Kitchens', 
+                  'Number of Bathrooms', 
+                  'Number of Dining Rooms', 
+                  'Nmumber of Children Rooms', 
+                  'Number of Study Rooms', 
+                  'Number of Balconies', 
+                  'Number of Storage Rooms', 
+                  'Width to Length Ratio of Land Plot', 
+                  'Maximum Length of Bedroom', 
+                  'Minimum Length of Bedroom', 
+                  'Maximum Width of Bedroom',
+                  'Minimum Width of Bedroom', 
+                  'Front Door Location X-axis', 
+                  'Front Door Location Y-axis',
+                  'Number of Bedrooms'
+      }
+
+      Response: "If any of the information is not available in the input write a counter response to ask about that information in this string. Ask in a casual manner like converstion. Try to add minimum tecnical and mathamatical terms. Also ask for 1 missing feature at a time. If user is unsure fill what suits according to the rest of information. Do not show feature vector to the user. Also dont use word 'Response' before generating a response."
+`;
+
+  // replace {user_prompt} with message
+  const str1 = str.replace('{user_prompt}', message);
+
   try {
-    const prompt = message;
+    const prompt = str1;
     const result = await model.generateContent(prompt);
     const response = await result.response;
     return response.text();
