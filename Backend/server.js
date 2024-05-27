@@ -198,8 +198,10 @@ app.post('/logout', async (req, res) => {
 
 app.post('/saveMessage', async (req, res) => {
   try {
-    const { message, sender, featureVector } = req.body;
-    const answer = await generateContent(message, featureVector);
+    console.log(req.body);
+    const { message, sender, featureVector, lastMsg } = req.body;
+    console.log(req.body);
+    const answer = await generateContent(message, featureVector, lastMsg);
     const jsonAnswer = JSON.parse(answer);
     console.log("Answer: ", jsonAnswer);
 
@@ -245,7 +247,8 @@ app.post('/saveMessage', async (req, res) => {
         res.status(400).json({ error: detail });
       }
       else if (status_code == 200) {
-        res.status(200).json({ message: detail, answer: answer });
+        res.status(200).json({ message: detail, answer: jsonAnswer["response"], featureVector: jsonAnswer["featureVector"]});
+        // TODO: save featureVector in database
       }
       else {
         res.status(500).json({ error: 'An error occurred during saving message' });
@@ -255,7 +258,7 @@ app.post('/saveMessage', async (req, res) => {
       res.status(500).json({ error: 'An error occurred during saving message' });
     }
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred during saving message' });
+    res.status(500).json({ error: 'An error occurred during saving message', msg: error });
   }
 });
 
@@ -437,12 +440,13 @@ const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const generationConfig = { temperature: 0.9, topP: 1, topK: 1, maxOutputTokens: 4096 };
 
 // 2. Initialise Model
-const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig });
+const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro", generationConfig });
 
 
 // 3. Generate Content
-async function generateContent(message, featureVector) {
+async function generateContent(message, featureVector, lastMsg) {
   const str = `Input: {user_prompt}
+      Last Message from AI: {lastMsg}
       OldFeatureVector: {featureVector}
 
       The user is giving information about the house whose floor plan is to be designed.
@@ -455,8 +459,6 @@ async function generateContent(message, featureVector) {
       If user is unsure fill what suits according to the rest of information. Do not show feature vector to the user. Also dont use word 'Response' before generating a response.
       The user does not know that the information is going into feature vector, so the conversation should be casual.
       Again the output should be in json format as follows:
-
-      outputformat = {
         "featureVector":{
             "NumberofLivingRooms": int, 
             "NumberofKitchens": int, 
@@ -475,23 +477,23 @@ async function generateContent(message, featureVector) {
             "FrontDoorLocationY_axis": float,
             "NumberofBedrooms": int
         },
-        "response": ""
-      }
-`;
+        "response": ""`;
 
   // replace {user_prompt} with message
   const str1 = str.replace('{user_prompt}', message);
-  const str2 = str1.replace('{featureVector}', featureVector);
-  console.log(str2);
+  const str2 = str1.replace('{featureVector}', JSON.stringify(featureVector));
+  const str3 = str2.replace('{lastMsg}', lastMsg);
+  console.log(str3);
 
   try {
-    const prompt = str2;
+    const prompt = str3;
     const result = await model.generateContent(prompt);
     // console.log('Result:', result);
     const response = await result.response;
     console.log('Result:', response.text());
-
-    return response.text();
+    const text = response.text();
+    return text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1);
+    
   } catch (error) {
     console.error('Error generating content:', error);
   }

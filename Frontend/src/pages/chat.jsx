@@ -81,7 +81,7 @@ const Chat = (props) => {
       .then((res) => {
         console.log(res.data);
         setChats(res.data.messages);
-
+        // TODO: Here fetch the feature vector from the database and use setFeatureVector to set the state
         setTimeout(() => {
           chatbox.scrollTop = chatbox.scrollHeight;
         }, 100);
@@ -124,15 +124,17 @@ const Chat = (props) => {
     const payload = {
       message: msgToSend,
       sender: ReactSession.get("email"),
-      featureVector: featureVector
+      featureVector: featureVector,
+      lastMsg: chats.length === 0 ? "" : chats[chats.length - 1].message,
     };
 
+    console.log(JSON.stringify(payload));
     axios
       .post("http://localhost:5000/saveMessage", payload)
       .then((res) => {
         // console.log(res.data);
-        const jsonResponse = JSON.parse(res.data.answer);
-        setFeatureVector(jsonResponse.featureVector);
+        // const jsonResponse = JSON.parse(res.data.answer);
+        setFeatureVector(res.data.featureVector);
         console.log(featureVector);
         setLoadingMsg(false);
         getChats();
