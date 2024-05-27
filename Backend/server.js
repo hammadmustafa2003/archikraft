@@ -198,9 +198,12 @@ app.post('/logout', async (req, res) => {
 
 app.post('/saveMessage', async (req, res) => {
   try {
-    const { message, sender } = req.body;
-    const answer = await generateContent(message);
-    console.log("Answer: ", answer);
+    const { message, sender, featureVector } = req.body;
+    const answer = await generateContent(message, featureVector);
+    const jsonAnswer = JSON.parse(answer);
+    console.log("Answer: ", jsonAnswer);
+
+    // console.log("Answer: ", answer);
     const apiUrl = 'http://68.183.94.49:8888/save-message';
     // add ngrok-skip-browser-warning in header
     const headers = {
@@ -231,7 +234,7 @@ app.post('/saveMessage', async (req, res) => {
         params: {
           sender: 'gemini',
           receiver: sender,
-          message: answer,
+          message: jsonAnswer["response"],
           timestamp: new Date()
         },
         headers: headers
@@ -271,7 +274,7 @@ app.get('/getMessages', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
@@ -438,58 +441,56 @@ const model = genAI.getGenerativeModel({ model: "gemini-pro", generationConfig }
 
 
 // 3. Generate Content
-async function generateContent(message) {
+async function generateContent(message, featureVector) {
   const str = `Input: {user_prompt}
-      old_feature_vector:{
-            'Number of Living Rooms': 2, 
-                  'Number of Kitchens': 1, 
-                  'Number of Bathrooms': 2, 
-                  'Number of Dining Rooms': -1, 
-                  'Nmumber of Children Rooms': -1, 
-                  'Number of Study Rooms': -1, 
-                  'Number of Balconies': -1, 
-                  'Number of Storage Rooms': -1, 
-                  'Width to Length Ratio of Land Plot': -1, 
-                  'Maximum Length of Bedroom': -1, 
-                  'Minimum Length of Bedroom': -1, 
-                  'Maximum Width of Bedroom': -1,
-                  'Minimum Width of Bedroom': -1, 
-                  'Front Door Location X-axis': -1, 
-                  'Front Door Location Y-axis': -1,
-                  'Number of Bedrooms': 1
+      OldFeatureVector: {featureVector}
+
+      The user is giving information about the house whose floor plan is to be designed.
+      Extract the information from the input for the feature vector and then output the updated vecture vector, along with response (if required) in the following json format. 
+      The feature vector should only have integers or floats in the value of key-value pairs of feature vector. If an information is not found replace it with -1.
+
+      Response Guidleines:
+      If any of the information is not available in the input write a counter response to ask about that information in this string. 
+      Ask in a casual manner like converstion. Try to add minimum tecnical and mathamatical terms. Also ask for 1 missing feature at a time. 
+      If user is unsure fill what suits according to the rest of information. Do not show feature vector to the user. Also dont use word 'Response' before generating a response.
+      The user does not know that the information is going into feature vector, so the conversation should be casual.
+      Again the output should be in json format as follows:
+
+      outputformat = {
+        "featureVector":{
+            "NumberofLivingRooms": int, 
+            "NumberofKitchens": int, 
+            "NumberofBathrooms": int, 
+            "NumberofDiningRooms": int, 
+            "NumberofChildrenRooms": int, 
+            "NumberofStudyRooms": int, 
+            "NumberofBalconies": int, 
+            "NumberofStorageRooms": int, 
+            "WidthToLengthRatioofLandPlot": float, 
+            "MaximumLengthofBedroom": float, 
+            "MinimumLengthofBedroom": float, 
+            "MaximumWidthofBedroom": float,
+            "MinimumWidthofBedroom": float, 
+            "FrontDoorLocationX_axis": float, 
+            "FrontDoorLocationY_axis": float,
+            "NumberofBedrooms": int
+        },
+        "response": ""
       }
-
-      Extract the information for the feature vector from the input then output in the following format. The feature vector should only have integers or floats in the value of key-value pairs of feature vector. If an information is not found replace it with -1.
-
-      Feature vector:{
-            'Number of Living Rooms', 
-                  'Number of Kitchens', 
-                  'Number of Bathrooms', 
-                  'Number of Dining Rooms', 
-                  'Nmumber of Children Rooms', 
-                  'Number of Study Rooms', 
-                  'Number of Balconies', 
-                  'Number of Storage Rooms', 
-                  'Width to Length Ratio of Land Plot', 
-                  'Maximum Length of Bedroom', 
-                  'Minimum Length of Bedroom', 
-                  'Maximum Width of Bedroom',
-                  'Minimum Width of Bedroom', 
-                  'Front Door Location X-axis', 
-                  'Front Door Location Y-axis',
-                  'Number of Bedrooms'
-      }
-
-      Response: "If any of the information is not available in the input write a counter response to ask about that information in this string. Ask in a casual manner like converstion. Try to add minimum tecnical and mathamatical terms. Also ask for 1 missing feature at a time. If user is unsure fill what suits according to the rest of information. Do not show feature vector to the user. Also dont use word 'Response' before generating a response."
 `;
 
   // replace {user_prompt} with message
   const str1 = str.replace('{user_prompt}', message);
+  const str2 = str1.replace('{featureVector}', featureVector);
+  console.log(str2);
 
   try {
-    const prompt = str1;
+    const prompt = str2;
     const result = await model.generateContent(prompt);
+    // console.log('Result:', result);
     const response = await result.response;
+    console.log('Result:', response.text());
+
     return response.text();
   } catch (error) {
     console.error('Error generating content:', error);

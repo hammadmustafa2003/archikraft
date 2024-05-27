@@ -2,7 +2,7 @@ import AccountImage from "../images/profile_white.png";
 import menuIcon from "../images/menu.png";
 import closeIcon from "../images/close.png";
 import { ReactSession } from "react-client-session";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 const AdminSideMenu = (props) => {
 

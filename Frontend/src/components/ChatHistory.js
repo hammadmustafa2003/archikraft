@@ -2,8 +2,8 @@ import AccountImage from "../images/profile_white.png";
 import menuIcon from "../images/menu.png";
 import closeIcon from "../images/close.png";
 import { ReactSession } from "react-client-session";
-import { useEffect, useState } from "react";
-import axios from "axios";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
 
 
 

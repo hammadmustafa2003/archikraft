@@ -16,6 +16,7 @@ const News = (props) => {
       axios.get("http://localhost:5000/getNews").then((response) => {
         response.data.news.map((item) => {
           item.timestamp = new Date(item.timestamp).toLocaleString();
+          return item;
         });
         setNews(response.data.news);
       });

@@ -3,7 +3,7 @@ import { useCountries } from "use-react-countries";
 import React from "react";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import axiosInstance from "../axiosInstance";
+// import axiosInstance from "../axiosInstance";
 import axios from "axios";
 import { sha256 } from "js-sha256";
 
@@ -15,7 +15,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("architect");
   const [country, setCountry] = useState("Pakistan");
-  const [phoneNumber, setPhoneNumber] = useState("+923164117090");
+  const [phoneNumber, setPhoneNumber] = useState("+92");
   const [passwordStrength, setStrength] = useState(0);
 
   const { countries } = useCountries();

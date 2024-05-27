@@ -1,7 +1,7 @@
 import React from "react";
 import AccountImage from "../images/profile_white.png";
 import { ReactSession } from "react-client-session";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 const Profile = () => {
   const user_details = {

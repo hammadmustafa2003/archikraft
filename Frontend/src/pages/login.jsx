@@ -41,7 +41,7 @@ const Login = () => {
       .post("http://localhost:5000/login", payload)
       .then((response) => {
         if (response.status === 200) {
-          const { message } = response.data;
+          // const { message } = response.data;
           const { user } = response.data;
           //   document.getElementById("error").innerHTML =
           //     "<p class='text-green-400 text-md italic'>" + message + "</p>";
@@ -58,13 +58,13 @@ const Login = () => {
           } else {
             window.location.href = "/chat";
           }
-        } else if (response.status == 400) {
+        } else if (response.status === 400) {
           document.getElementById("error").innerHTML =
             "<p class='text-red-400 text-md italic'>Invalid email or password.</p>";
           setTimeout(() => {
             document.getElementById("error").innerHTML = "";
           }, 3000);
-        } else if (response.status == 500) {
+        } else if (response.status === 500) {
           document.getElementById("error").innerHTML =
             "<p class='text-red-400 text-md italic'>Server error.</p>";
           setTimeout(() => {

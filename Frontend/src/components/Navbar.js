@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import {Link} from "react-router-dom"
 import LogoWhite from "../images/logo/Logo_white.png";
@@ -32,8 +32,7 @@ const Navbar = (props) => {
     const toggleSignUp = () => {
         navigate("/signup");
     }
-
-
+    
     return (
         <div>
             <nav className="backdrop-blur-md p-4 z-10">
@@ -82,7 +81,7 @@ const Navbar = (props) => {
                         </Container>
                     </div> */}
                     {
-                        ReactSession.get("username") === null ?
+                        ReactSession.get("username") === null ||  ReactSession.get("username") === undefined?
                             <div className="flex">
                                 <Container>
                                     <button

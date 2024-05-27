@@ -14,9 +14,11 @@ import pdf from "../images/pdf.svg";
 import axios from "axios";
 import { ReactSession } from "react-client-session";
 import { useEffect } from "react";
-import Pdf from "react-to-pdf";
+// import Pdf from "react-to-pdf";
 import { jsPDF } from "jspdf";
 import { createRef } from "react";
+// import { set } from "mongoose";
+import Loader from "./../utils/Loader";
 
 const style_sent =
   "md:text-[1rem] text-sm font-normal bg-[rgb(0,0,255,0.05)] border-[1px] border-[#0000cc] filter backdrop-blur-xl text-white py-2 px-3 rounded-tl-3xl rounded-bl-3xl rounded-tr-3xl self-end max-w-[75%] text-right m-10";
@@ -24,8 +26,30 @@ const style_recv =
   "md:text-[1rem] text-sm font-light bg-[rgb(0,255,0,0.05)] border-[1px] border-[#00cc00] filter backdrop-blur-xl text-white py-2 px-3 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl self-start max-w-[75%] text-left m-10";
 
 const Chat = (props) => {
-  const [sent, setSent] = useState(style_sent);
-  const [recv, setRecv] = useState(style_recv);
+
+
+  const [featureVector, setFeatureVector] =useState( {
+    'NumberofLivingRooms': -1,
+    'NumberofKitchens': -1,
+    'NumberofBathrooms': -1,
+    'NumberofDiningRooms': -1,
+    'NumberofChildrenRooms': -1,
+    'NumberofStudyRooms': -1,
+    'NumberofBalconies': -1,
+    'NumberofStorageRooms': -1,
+    'WidthToLengthRatioofLandPlot': -1,
+    'MaximumLengthofBedroom': -1,
+    'MinimumLengthofBedroom': -1,
+    'MaximumWidthofBedroom': -1,
+    'MinimumWidthofBedroom': -1,
+    'FrontDoorLocationX_axis': -1,
+    'FrontDoorLocationY_axis': -1,
+    'NumberofBedrooms': -1
+  });
+  // const [sent, setSent] = useState(style_sent);
+  // const [recv, setRecv] = useState(style_recv);
+  const [loadingMsg, setLoadingMsg] = useState(false);
+  const [lastMsg, setLastMsg] = useState("");
   const [isChatHistoryVisible, setChatHistoryVisible] = useState(false);
 
   const toggleChatHistory = () => {
@@ -46,6 +70,8 @@ const Chat = (props) => {
 
   // get previous chats from backend
   const getChats = () => {
+    const chatbox = document.getElementById("chatbox");
+    chatbox.scrollTop = chatbox.scrollHeight;
     axios
       .get("http://localhost:5000/getMessages", {
         params: {
@@ -55,16 +81,10 @@ const Chat = (props) => {
       .then((res) => {
         console.log(res.data);
         setChats(res.data.messages);
-        const chatbox = document.getElementById("chatbox");
-        res.data.messages.forEach((chat) => {
-          const div = document.createElement("div");
-          div.className = `${
-            chat.sender === ReactSession.get("email") ? style_sent : style_recv
-          }`;
-          div.innerHTML = chat.message;
-          chatbox.appendChild(div);
-        });
-        chatbox.scrollTop = chatbox.scrollHeight;
+
+        setTimeout(() => {
+          chatbox.scrollTop = chatbox.scrollHeight;
+        }, 100);
         // update chatbox
       })
       .catch((err) => {
@@ -78,9 +98,9 @@ const Chat = (props) => {
 
   const sendMsg = (e) => {
     e.preventDefault();
+    const temp = document.getElementById("msg");
     if (message === "") {
       // change placeholder to "Please enter a message" for 2 seconds
-      const temp = document.getElementById("msg");
       temp.placeholder = "Please enter a message";
       temp.className = "w-full h-12 rounded-lg border-2 border-red-500 p-2";
       setTimeout(() => {
@@ -89,6 +109,12 @@ const Chat = (props) => {
       }, 3000);
       return;
     }
+
+    const msgToSend = message;
+    setLastMsg(message);
+    temp.value = "";
+    setMessage("");
+    setLoadingMsg(true);
     // if session is not set, redirect to login page
     if (ReactSession.get("email") === null) {
       alert("Please login to continue.");
@@ -96,14 +122,19 @@ const Chat = (props) => {
     }
     // send message to backend
     const payload = {
-      message: message,
+      message: msgToSend,
       sender: ReactSession.get("email"),
+      featureVector: featureVector
     };
 
     axios
       .post("http://localhost:5000/saveMessage", payload)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
+        const jsonResponse = JSON.parse(res.data.answer);
+        setFeatureVector(jsonResponse.featureVector);
+        console.log(featureVector);
+        setLoadingMsg(false);
         getChats();
       })
       .catch((err) => {
@@ -120,9 +151,8 @@ const Chat = (props) => {
       chatbox.innerHTML = "";
       chats.forEach((chat) => {
         const div = document.createElement("div");
-        div.className = `${
-          chat.sender === ReactSession.get("email") ? style_sent : style_recv
-        }`;
+        div.className = `${chat.sender === ReactSession.get("email") ? style_sent : style_recv
+          }`;
         div.innerHTML = chat.message;
         chatbox.appendChild(div);
       });
@@ -133,9 +163,8 @@ const Chat = (props) => {
     chats.forEach((chat) => {
       if (chat.message.includes(searchStr)) {
         const div = document.createElement("div");
-        div.className = `${
-          chat.sender === ReactSession.get("email") ? style_sent : style_recv
-        }`;
+        div.className = `${chat.sender === ReactSession.get("email") ? style_sent : style_recv
+          }`;
         div.innerHTML = chat.message;
         chatbox.appendChild(div);
       }
@@ -145,6 +174,7 @@ const Chat = (props) => {
 
   const parseAudio = (e) => {
     e.preventDefault();
+    //TODO: parse audio
     console.log("audio");
   };
 
@@ -177,9 +207,8 @@ const Chat = (props) => {
   return (
     <div className="flex flex-row flex-nowrap justify-center align-middle h-screen md:h-screen relative">
       <div
-        className={`transform transition-transform ease-out duration-300 absolute top-0 left-0 h-full w-full z-20 filter backdrop-blur-xl ${
-          isChatHistoryVisible ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`transform transition-transform ease-out duration-300 absolute top-0 left-0 h-full w-full z-20 filter backdrop-blur-xl ${isChatHistoryVisible ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {<ChatHistory toggleHistory={toggleChatHistory} />}
       </div>
@@ -243,9 +272,28 @@ const Chat = (props) => {
           </form>
 
           <div
-            className="flex flex-col flex-grow space-y-5 mt-2 md:mt-5 mb-5 md:mb-10 overflow-y-auto scrollbar-hide"
+            className="flex flex-col flex-grow space-y-5 mt-2 md:mt-5 mb-5 md:mb-10 overflow-y-auto webkit-scrollbar:none;	"
             id="chatbox"
-          ></div>
+            style={{ scrollBehavior: "smooth", }}
+          >
+            {chats.map((chat, index) => (
+              <div
+                key={index}
+                className={`${chat.sender === ReactSession.get("email") ? style_sent : style_recv
+                  }`}
+              >
+                {chat.message}
+              </div>
+            ))}
+
+            {loadingMsg && (
+              <div key={-1} className={style_sent} > {lastMsg} </div>
+            )}
+            {loadingMsg && (
+              <Loader />
+            )}
+
+          </div>
           <form
             className="flex flex-row justify-center items-center space-x-2"
             onSubmit={sendMsg}
