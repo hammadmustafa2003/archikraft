@@ -7,6 +7,7 @@ import closeIcon from "../images/close.png";
 import floorMapIcon from "../images/floor_plan_icon.png";
 import SendIcon from "../images/send.png";
 import MicIcon from "../images/mic.png";
+import StopIcon from "../images/stop.png";
 import SearchIcon from "../images/search.png";
 import LogoWhite from "../images/logo/Logo_white.png";
 import download from "../images/download_white.png";
@@ -17,8 +18,8 @@ import { useEffect } from "react";
 // import Pdf from "react-to-pdf";
 import { jsPDF } from "jspdf";
 import { createRef } from "react";
-// import { set } from "mongoose";
 import Loader from "./../utils/Loader";
+import { ReactMic } from 'react-mic';
 
 const style_sent =
   "md:text-[1rem] text-sm font-normal bg-[rgb(0,0,255,0.05)] border-[1px] border-[#0000cc] filter backdrop-blur-xl text-white py-2 px-3 rounded-tl-3xl rounded-bl-3xl rounded-tr-3xl self-end max-w-[75%] text-right m-10";
@@ -28,7 +29,7 @@ const style_recv =
 const Chat = (props) => {
 
 
-  const [featureVector, setFeatureVector] =useState( {
+  const [featureVector, setFeatureVector] = useState({
     'NumberofLivingRooms': -1,
     'NumberofKitchens': -1,
     'NumberofBathrooms': -1,
@@ -51,6 +52,10 @@ const Chat = (props) => {
   const [loadingMsg, setLoadingMsg] = useState(false);
   const [lastMsg, setLastMsg] = useState("");
   const [isChatHistoryVisible, setChatHistoryVisible] = useState(false);
+  const [chats, setChats] = useState([]);
+  const [message, setMessage] = useState("");
+  const [searchStr, setSearchStr] = useState("");
+  const [recordingStarted, setRecordingStarted] = useState(false);
 
   const toggleChatHistory = () => {
     setChatHistoryVisible(!isChatHistoryVisible);
@@ -64,9 +69,7 @@ const Chat = (props) => {
 
   props.navbarChange(-1);
 
-  const [chats, setChats] = useState([]);
-  const [message, setMessage] = useState("");
-  const [searchStr, setSearchStr] = useState("");
+
 
   // get previous chats from backend
   const getChats = () => {
@@ -96,8 +99,7 @@ const Chat = (props) => {
     getChats();
   }, []);
 
-  const sendMsg = (e) => {
-    e.preventDefault();
+  const sendMsg = () => {
     const temp = document.getElementById("msg");
     if (message === "") {
       // change placeholder to "Please enter a message" for 2 seconds
@@ -144,6 +146,11 @@ const Chat = (props) => {
       });
   };
 
+  const sendMsgEventHandler = (e) => {
+    e.preventDefault();
+    sendMsg();
+  };
+
   const searchMsg = (e) => {
     e.preventDefault();
     // search for message in chats
@@ -176,8 +183,7 @@ const Chat = (props) => {
 
   const parseAudio = (e) => {
     e.preventDefault();
-    //TODO: parse audio
-    console.log("audio");
+    setRecordingStarted(!recordingStarted);
   };
 
   // add a download button to download the generated floor plan
@@ -298,7 +304,7 @@ const Chat = (props) => {
           </div>
           <form
             className="flex flex-row justify-center items-center space-x-2"
-            onSubmit={sendMsg}
+            onSubmit={sendMsgEventHandler}
           >
             {/* < > */}
             <input
@@ -316,7 +322,7 @@ const Chat = (props) => {
                 parseAudio(e);
               }}
             >
-              <img src={MicIcon} alt="send" className="w-10" />
+              <img src={recordingStarted ? StopIcon : MicIcon} alt="send" className="w-10" />
             </button>
             <button
               type="submit"
@@ -325,6 +331,28 @@ const Chat = (props) => {
               <img src={SendIcon} alt="send" className="w-10" />
             </button>
           </form>
+
+          <ReactMic
+            record={recordingStarted}
+            // className="sound-wave"
+            className="hidden"
+            onStop={(recordedBlob) => {
+              setRecordingStarted(false)
+              console.log('chunk of real-time data is: ', recordedBlob);
+
+              const soundData = new FormData();
+              soundData.append("file", recordedBlob.blob);
+              axios.post("http://127.0.0.1:5000/transcribe", soundData).then((res) => {
+                console.log(res.data);
+                const transcript = res.data.text;
+                setMessage(transcript);
+                sendMsg();
+              }).catch((err) => {
+                console.log(err);
+              });
+            }}
+            duration={15}
+          />
           {/* </div> */}
         </div>
         {isChatOutputVisible && (
