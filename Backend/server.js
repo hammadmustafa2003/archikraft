@@ -432,30 +432,7 @@ app.post('/deleteNews', async (req, res) => {
 }
 );
 
-app.post('/transcribe', async (req, res) => {
-  try {
-    const soundData = new FormData();
-    soundData.append("file", req.body.file);
 
-    const apiUrl = 'http://127.0.0.1:8000/transcribe';
-    const response = await axios.post(apiUrl, soundData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-
-    console.log(response.data);
-    let { status_code, detail } = response.data;
-    if (status_code == 200) {
-      res.status(200).json({ message: detail });
-    }
-    else {
-      res.status(500).json({ error: 'An error occurred during transcribing' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred during transcribing' });
-  }
-});
 dotenv.config();
 
 // 1. Configuration

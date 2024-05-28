@@ -342,7 +342,9 @@ const Chat = (props) => {
 
               const soundData = new FormData();
               soundData.append("file", recordedBlob.blob);
-              axios.post("http://127.0.0.1:5000/transcribe", soundData).then((res) => {
+
+              // Use python server here
+              axios.post("http://127.0.0.1:8000/transcribe", soundData).then((res) => {
                 console.log(res.data);
                 const transcript = res.data.text;
                 setMessage(transcript);
