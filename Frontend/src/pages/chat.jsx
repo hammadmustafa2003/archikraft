@@ -43,9 +43,17 @@ const Chat = (props) => {
   const [chats, setChats] = useState([]);
   const [message, setMessage] = useState("");
   const [searchStr, setSearchStr] = useState("");
+  const [loader, setLoader] = useState(false);
 
   // get previous chats from backend
   const getChats = () => {
+    // make audio and send button disabled
+    const audio_button = document.getElementById("audio");
+    const send_button = document.getElementById("send");
+    const msg = document.getElementById("msg");
+    audio_button.disabled = true;
+    send_button.disabled = true;
+    msg.value = "Loading...";
     axios
       .get("http://localhost:5000/getMessages", {
         params: {
@@ -61,14 +69,22 @@ const Chat = (props) => {
           div.className = `${
             chat.sender === ReactSession.get("email") ? style_sent : style_recv
           }`;
-          div.innerHTML = chat.message;
+          div.innerHTML = chat.message.replace(/\n/g, "<br>");
           chatbox.appendChild(div);
         });
         chatbox.scrollTop = chatbox.scrollHeight;
         // update chatbox
+        setLoader(false);
+        audio_button.disabled = false;
+        send_button.disabled = false;
+        msg.value = "";
       })
       .catch((err) => {
         console.log(err);
+        setLoader(false);
+        audio_button.disabled = false;
+        send_button.disabled = false;
+        msg.value = "";
       });
   };
 
@@ -100,14 +116,30 @@ const Chat = (props) => {
       sender: ReactSession.get("email"),
     };
 
+    setLoader(true);
+    // make audio and send button disabled
+    const audio_button = document.getElementById("audio");
+    const send_button = document.getElementById("send");
+    const msg = document.getElementById("msg");
+    audio_button.disabled = true;
+    send_button.disabled = true;
+    msg.value = "Loading...";
     axios
       .post("http://localhost:5000/saveMessage", payload)
       .then((res) => {
         console.log(res.data);
         getChats();
+        setLoader(false);
+        audio_button.disabled = false;
+        send_button.disabled = false;
+        msg.value = "";
       })
       .catch((err) => {
         console.log(err);
+        setLoader(false);
+        audio_button.disabled = false;
+        send_button.disabled = false;
+        msg.value = "";
       });
   };
 
@@ -241,7 +273,6 @@ const Chat = (props) => {
               <img src={SearchIcon} alt="send" className="w-10" />
             </button>
           </form>
-
           <div
             className="flex flex-col flex-grow space-y-5 mt-2 md:mt-5 mb-5 md:mb-10 overflow-y-auto scrollbar-hide"
             id="chatbox"
@@ -261,6 +292,7 @@ const Chat = (props) => {
             />
             <button
               type="button"
+              id="audio"
               className="bg-[rgb(0,0,255,0.05)] hover:bg-blue-500 hover:-translate-y-1 hover:scale-105 ease-in duration-100 border-[1.5px] border-[#0000cc] p-2 rounded-lg"
               onClick={(e) => {
                 parseAudio(e);
@@ -270,6 +302,7 @@ const Chat = (props) => {
             </button>
             <button
               type="submit"
+              id="send"
               className="bg-[rgb(0,255,0,0.05)] hover:bg-green-500 hover:-translate-y-1 hover:scale-105 ease-in duration-100 border-[1.5px] border-[#00cc00] p-2 rounded-lg"
             >
               <img src={SendIcon} alt="send" className="w-10" />
