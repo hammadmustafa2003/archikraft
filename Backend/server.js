@@ -199,7 +199,7 @@ app.post('/logout', async (req, res) => {
 app.post('/saveMessage', async (req, res) => {
   try {
     console.log(req.body);
-    const { message, sender, featureVector, lastMsg } = req.body;
+    const { message, sender, featureVector, lastMsg, id } = req.body;
     console.log(req.body);
     const answer = await generateContent(message, featureVector, lastMsg);
     const jsonAnswer = JSON.parse(answer);
@@ -216,7 +216,8 @@ app.post('/saveMessage', async (req, res) => {
         sender: sender,
         receiver: 'gemini',
         message: message,
-        timestamp: new Date()
+        timestamp: new Date(),
+        id: id
       },
       headers: headers
     });
@@ -237,7 +238,8 @@ app.post('/saveMessage', async (req, res) => {
           sender: 'gemini',
           receiver: sender,
           message: jsonAnswer["response"],
-          timestamp: new Date()
+          timestamp: new Date(),
+          id: id
         },
         headers: headers
       });
@@ -265,7 +267,7 @@ app.post('/saveMessage', async (req, res) => {
 
 app.get('/getMessages', async (req, res) => {
   try {
-    const { user } = req.query;
+    const { id } = req.query;
     const apiUrl = 'http://0.0.0.0:8000/get-messages';
     // add ngrok-skip-browser-warning in header
     const headers = {
@@ -273,17 +275,17 @@ app.get('/getMessages', async (req, res) => {
     };
     const response = await axios.get(apiUrl, {
       params: {
-        user: user
+        id: id
       },
       headers: headers
     });
-    // console.log(response.data);
+    console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
     }
     else if (status_code == 200) {
-      res.status(200).json({ message: detail, messages: response.data.messages });
+      res.status(200).json({ message: detail, messages: response.data.chat });
     }
     else {
       res.status(500).json({ error: 'An error occurred during getting messages' });
@@ -432,6 +434,58 @@ app.post('/deleteNews', async (req, res) => {
 }
 );
 
+app.post('/getAllChatIds', async (req, res) => {
+  try {
+    const user = req.body.user;
+    const apiUrl = 'http://0.0.0.0:8000/get-all-chat-ids';
+    const headers = {
+      'ngrok-skip-browser-warning': '345'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        user: user
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail, chatIds: response.data.chat_ids });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during getting chat ids' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during getting chat ids' });
+  }
+});
+
+app.post('/getChat', async (req, res) => {
+  try {
+    const { id } = req.body;
+    const apiUrl = 'http://0.0.0.0:8000/get-chat-by-id';
+    const headers = {
+      'ngrok-skip-browser-warning': '456'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        id: id
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail, chat: response.data.chat });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during getting chat' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during getting chat' });
+  }
+});
+
 app.post('/transcribe', async (req, res) => {
   try {
     const soundData = new FormData();
@@ -521,7 +575,6 @@ async function generateContent(message, featureVector, lastMsg) {
     console.error('Error generating content:', error);
   }
 }
-
 
 // Start the server
 app.listen(port, () => {
