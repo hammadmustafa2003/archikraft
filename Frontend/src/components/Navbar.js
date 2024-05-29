@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CSSTransition } from "react-transition-group";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import LogoWhite from "../images/logo/Logo_white.png";
 // import AccountImage from "../images/profile_white.png";
 import MobileMenu from "./MobileMenu";
@@ -32,7 +32,7 @@ const Navbar = (props) => {
     const toggleSignUp = () => {
         navigate("/signup");
     }
-    
+
     return (
         <div>
             <nav className="backdrop-blur-md p-4 z-10">
@@ -81,7 +81,7 @@ const Navbar = (props) => {
                         </Container>
                     </div> */}
                     {
-                        ReactSession.get("username") === null ||  ReactSession.get("username") === undefined?
+                        ReactSession.get("username") === null || ReactSession.get("username") === undefined ?
                             <div className="flex">
                                 <Container>
                                     <button
@@ -102,11 +102,11 @@ const Navbar = (props) => {
                             <div className="flex">
                                 <Container>
                                     <button
-                                    className="hidden md:flex transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md mr-5"
+                                        className="hidden md:flex transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md mr-5"
                                         onClick={() => {
-                                            window.location.href = "/profile";
+                                            window.location.href = "/chat";
                                         }}>
-                                        Profile
+                                        Chat
                                     </button>
                                 </Container>
 
