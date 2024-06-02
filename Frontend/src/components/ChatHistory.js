@@ -25,6 +25,29 @@ const ChatHistory = (props) => {
         );
     }, []);
 
+    const createChat = (e) => {
+        const payload = {
+            user: ReactSession.get("email"),
+            timestamp: new Date().toISOString(),
+        };
+        axios
+            .post("http://localhost:5000/createChat", payload)
+            .then((response) => {
+                console.log(response);
+                if (response.status === 200) {
+                    // get id from response
+                    const chatId = response.data.id;
+                    console.log(chatId);
+                    window.location.href = `/chat/${chatId}`;
+                } else {
+                    alert("Error in creating chat");
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
 
     return (
         <div key="chat-history" className=" w-max h-full bg-slate-950 shadow-xl shadow-black relative">
@@ -38,14 +61,15 @@ const ChatHistory = (props) => {
                 </div>
                 <ul className="mb-10 scrollbar-hide overflow-y-auto h-full">
                     {chatHistory.map((c, index) => (
-                        <Link to={`/chat/${c}`}>
+                        <a href={`/chat/${c}`}>
                             <li key={index} className="flex items-center font-semibold text-white hover:text-black m-2 p-2 hover:bg-[rgb(255,255,255,0.7)] h-12 rounded-md">
                                 {c}
                             </li>
-                        </Link>
+                        </a>
                     ))}
                 </ul>
-                <button className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"> Create new plan </button>
+                <button onClick={createChat}
+                    className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"> Create new plan </button>
                 <button className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"
                     onClick={() => {
                         window.location.href = "/news";

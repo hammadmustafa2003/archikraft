@@ -486,6 +486,33 @@ app.post('/getChat', async (req, res) => {
   }
 });
 
+app.post('/createChat', async (req, res) => {
+  try {
+    const { user, timestamp } = req.body;
+    const apiUrl = 'http://0.0.0.0:8000/create-chat';
+    const headers = {
+      'ngrok-skip-browser-warning': '567'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        user: user,
+        timestamp: timestamp
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail, id } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail, id: id });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during creating chat' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during creating chat' });
+  }
+});
+
 app.post('/transcribe', async (req, res) => {
   try {
     const soundData = new FormData();
@@ -527,7 +554,7 @@ async function generateContent(message, featureVector, lastMsg) {
       OldFeatureVector: {featureVector}
 
       The user is giving information about the house whose floor plan is to be designed.
-      Extract the information from the input for the feature vector and then output the updated vecture vector, along with response (if required) in the following json format. 
+      Extract the information from the input for the feature vector and then output the updated vecture vector, along with response (if required) in the following json format and maintain the order of the keys as given below: 
       The feature vector should only have integers or floats in the value of key-value pairs of feature vector. If an information is not found replace it with -1.
 
       Response Guidleines:
