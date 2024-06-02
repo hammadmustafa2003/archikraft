@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 app.post('/signup', async (req, res) => {
   try {
     const { email, password, username, name, confirmPassword, role, country, phoneNumber } = req.body;
-    const apiUrl = 'http://68.183.94.49:8888/add-user';
+    const apiUrl = 'http://0.0.0.0:8000/add-user';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '537'
@@ -71,7 +71,7 @@ app.post('/signup', async (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const apiUrl = 'http://68.183.94.49:8888/login-user';
+    const apiUrl = 'http://0.0.0.0:8000/login-user';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '345'
@@ -105,7 +105,7 @@ app.post('/login', async (req, res) => {
 app.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
-    const apiUrl = 'http://68.183.94.49:8888/get-user-by-email';
+    const apiUrl = 'http://0.0.0.0:8000/get-user-by-email';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '456'
@@ -123,7 +123,7 @@ app.post('/forgot-password', async (req, res) => {
     }
     else if (status_code == 200) {
       const otp = getOTP();
-      const apiUrl = 'http://68.183.94.49:8888/send-email';
+      const apiUrl = 'http://0.0.0.0:8000/send-email';
       const response = await axios.get(apiUrl, {
         params: {
           email: email,
@@ -155,7 +155,7 @@ app.post('/forgot-password', async (req, res) => {
 app.post('/reset-password', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const apiUrl = 'http://68.183.94.49:8888/update-password';
+    const apiUrl = 'http://0.0.0.0:8000/update-password';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '567'
@@ -199,14 +199,14 @@ app.post('/logout', async (req, res) => {
 app.post('/saveMessage', async (req, res) => {
   try {
     console.log(req.body);
-    const { message, sender, featureVector, lastMsg } = req.body;
+    const { message, sender, featureVector, lastMsg, id } = req.body;
     console.log(req.body);
     const answer = await generateContent(message, featureVector, lastMsg);
     const jsonAnswer = JSON.parse(answer);
     console.log("Answer: ", jsonAnswer);
 
     // console.log("Answer: ", answer);
-    const apiUrl = 'http://68.183.94.49:8888/save-message';
+    const apiUrl = 'http://0.0.0.0:8000/save-message';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '678'
@@ -216,7 +216,8 @@ app.post('/saveMessage', async (req, res) => {
         sender: sender,
         receiver: 'gemini',
         message: message,
-        timestamp: new Date()
+        timestamp: new Date(),
+        id: id
       },
       headers: headers
     });
@@ -227,7 +228,7 @@ app.post('/saveMessage', async (req, res) => {
     }
     else if (status_code == 200) {
       // save gemini's answer
-      const apiUrl = 'http://68.183.94.49:8888/save-message';
+      const apiUrl = 'http://0.0.0.0:8000/save-message';
       // add ngrok-skip-browser-warning in header
       const headers = {
         'ngrok-skip-browser-warning': '678'
@@ -237,7 +238,8 @@ app.post('/saveMessage', async (req, res) => {
           sender: 'gemini',
           receiver: sender,
           message: jsonAnswer["response"],
-          timestamp: new Date()
+          timestamp: new Date(),
+          id: id
         },
         headers: headers
       });
@@ -247,7 +249,7 @@ app.post('/saveMessage', async (req, res) => {
         res.status(400).json({ error: detail });
       }
       else if (status_code == 200) {
-        res.status(200).json({ message: detail, answer: jsonAnswer["response"], featureVector: jsonAnswer["featureVector"]});
+        res.status(200).json({ message: detail, answer: jsonAnswer["response"], featureVector: jsonAnswer["featureVector"] });
         // TODO: save featureVector in database
       }
       else {
@@ -265,25 +267,25 @@ app.post('/saveMessage', async (req, res) => {
 
 app.get('/getMessages', async (req, res) => {
   try {
-    const { user } = req.query;
-    const apiUrl = 'http://68.183.94.49:8888/get-messages';
+    const { id } = req.query;
+    const apiUrl = 'http://0.0.0.0:8000/get-messages';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '789'
     };
     const response = await axios.get(apiUrl, {
       params: {
-        user: user
+        id: id
       },
       headers: headers
     });
-    // console.log(response.data);
+    console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
     }
     else if (status_code == 200) {
-      res.status(200).json({ message: detail, messages: response.data.messages });
+      res.status(200).json({ message: detail, messages: response.data.chat });
     }
     else {
       res.status(500).json({ error: 'An error occurred during getting messages' });
@@ -295,7 +297,7 @@ app.get('/getMessages', async (req, res) => {
 
 app.get('/getUsers', async (req, res) => {
   try {
-    const apiUrl = 'http://68.183.94.49:8888/get-all-users';
+    const apiUrl = 'http://0.0.0.0:8000/get-all-users';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '890'
@@ -323,7 +325,7 @@ app.get('/getUsers', async (req, res) => {
 app.post('/deleteUser', async (req, res) => {
   try {
     const { username } = req.body;
-    const apiUrl = 'http://68.183.94.49:8888/delete-user';
+    const apiUrl = 'http://0.0.0.0:8000/delete-user';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '901'
@@ -354,7 +356,7 @@ app.post('/deleteUser', async (req, res) => {
 app.get('/addNews', async (req, res) => {
   try {
     const { text } = req.query;
-    const apiUrl = 'http://68.183.94.49:8888/add-news';
+    const apiUrl = 'http://0.0.0.0:8000/add-news';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '678'
@@ -382,7 +384,7 @@ app.get('/addNews', async (req, res) => {
 
 app.get('/getNews', async (req, res) => {
   try {
-    const apiUrl = 'http://68.183.94.49:8888/get-news';
+    const apiUrl = 'http://0.0.0.0:8000/get-news';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '123'
@@ -407,7 +409,7 @@ app.get('/getNews', async (req, res) => {
 app.post('/deleteNews', async (req, res) => {
   try {
     const { id } = req.body;
-    const apiUrl = 'http://68.183.94.49:8888/delete-news';
+    const apiUrl = 'http://0.0.0.0:8000/delete-news';
     // add ngrok-skip-browser-warning in header
     const headers = {
       'ngrok-skip-browser-warning': '234'
@@ -432,7 +434,82 @@ app.post('/deleteNews', async (req, res) => {
 }
 );
 
+app.post('/getAllChatIds', async (req, res) => {
+  try {
+    const user = req.body.user;
+    const apiUrl = 'http://0.0.0.0:8000/get-all-chat-ids';
+    const headers = {
+      'ngrok-skip-browser-warning': '345'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        user: user
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail, chatIds: response.data.chat_ids });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during getting chat ids' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during getting chat ids' });
+  }
+});
 
+app.post('/getChat', async (req, res) => {
+  try {
+    const { id } = req.body;
+    const apiUrl = 'http://0.0.0.0:8000/get-chat-by-id';
+    const headers = {
+      'ngrok-skip-browser-warning': '456'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        id: id
+      },
+      headers: headers
+    });
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail, chat: response.data.chat });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during getting chat' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during getting chat' });
+  }
+});
+
+app.post('/transcribe', async (req, res) => {
+  try {
+    const soundData = new FormData();
+    soundData.append("file", req.body.file);
+
+    const apiUrl = 'http://127.0.0.1:8000/transcribe';
+    const response = await axios.post(apiUrl, soundData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during transcribing' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during transcribing' });
+  }
+});
 dotenv.config();
 
 // 1. Configuration
@@ -493,12 +570,11 @@ async function generateContent(message, featureVector, lastMsg) {
     console.log('Result:', response.text());
     const text = response.text();
     return text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1);
-    
+
   } catch (error) {
     console.error('Error generating content:', error);
   }
 }
-
 
 // Start the server
 app.listen(port, () => {
