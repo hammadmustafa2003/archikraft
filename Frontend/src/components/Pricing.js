@@ -36,8 +36,8 @@ const blockMaker = (navigate, title, monthlyPrice, annualPrice, features) => {
         const { error } = await stripe.redirectToCheckout({
             lineItems: lineItems,
             mode: 'subscription',
-            successUrl: `http://localhost:3000/chat`,
-            cancelUrl: `http://localhost:3000/pricing   `,
+            successUrl: `http://localhost:3000/finalizePayment`,
+            cancelUrl: `http://localhost:3000/pricing`,
             customerEmail: email,
         });
         console.warn(error.message);

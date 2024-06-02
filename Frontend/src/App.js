@@ -14,13 +14,14 @@ import SignUp from "./pages/signup";
 import Forget from "./pages/forget";
 import OTP from "./pages/otp";
 import NewPass from "./pages/newpass";
-import chatPage from "./pages/chat";
+import ChatPage from "./pages/chat";
 import Chat from "./pages/chatPage";
 import Admin from "./pages/admin";
 import News from "./pages/news";
 import Profile from "./pages/profile";
 import './App.css';
-import ChatPage from "./pages/chat";
+// import ChatPage from "./pages/chat";
+import Finalize from "./components/Finalize";
 
 
 const ProtectedURL = (activeIndex, handleActiveIndexChange) => {
@@ -76,11 +77,11 @@ const ProtectedURL = (activeIndex, handleActiveIndexChange) => {
           <Route path="/otp" element={<OTP />} />
           <Route path="/newpass" element={<NewPass />} />
           <Route path="/admin" element={<Admin navbarChange={handleActiveIndexChange} />} />
-          <Route path="/chat/:id" element={<Chat navbarChange={handleActiveIndexChange} />} />
           <Route path="/chat" element={<ChatPage navbarChange={handleActiveIndexChange} />} />
+          <Route path="/chat/:id" element={<Chat navbarChange={handleActiveIndexChange} />} />
           <Route path="/news" element={<News navbarChange={handleActiveIndexChange} />} />
           <Route path="/profile" element={<Profile navbarChange={handleActiveIndexChange} />} />
-
+          <Route path="/finalizePayment" element={<Finalize />} />
 
         </Routes>
 
