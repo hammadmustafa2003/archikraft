@@ -36,6 +36,29 @@ const ChatPage = (props) => {
 
   props.navbarChange(-1);
 
+  const createChat = (e) => {
+    const payload = {
+      user: ReactSession.get("email"),
+      timestamp: new Date().toISOString(),
+    };
+    axios
+      .post("http://localhost:5000/createChat", payload)
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          // get id from response
+          const chatId = response.data.id;
+          console.log(chatId);
+          window.location.href = `/chat/${chatId}`;
+        } else {
+          alert("Error in creating chat");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <div className="flex flex-row flex-nowrap justify-center align-middle h-screen md:h-screen relative">
       <div
@@ -73,7 +96,10 @@ const ChatPage = (props) => {
               </span>
             </div>
           </Link>
-          <button className="font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-1 ease-out duration-150">
+          <button
+            onClick={createChat}
+            className="font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-1 ease-out duration-150"
+          >
             {" "}
             Create new plan{" "}
           </button>

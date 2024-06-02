@@ -72,6 +72,7 @@ const Chat = (props) => {
   // get previous chats from backend
   const getChats = () => {
     const chatbox = document.getElementById("chatbox");
+    // clear chatbox
     chatbox.scrollTop = chatbox.scrollHeight;
     axios
       .get("http://localhost:5000/getMessages", {
@@ -102,8 +103,9 @@ const Chat = (props) => {
   };
 
   useEffect(() => {
+    console.log(chatID);
     getChats();
-  }, []);
+  }, [chatID]);
 
   const sendMsg = () => {
     const temp = document.getElementById("msg");

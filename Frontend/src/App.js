@@ -76,8 +76,8 @@ const ProtectedURL = (activeIndex, handleActiveIndexChange) => {
           <Route path="/otp" element={<OTP />} />
           <Route path="/newpass" element={<NewPass />} />
           <Route path="/admin" element={<Admin navbarChange={handleActiveIndexChange} />} />
-          <Route path="/chat" element={<ChatPage navbarChange={handleActiveIndexChange} />} />
           <Route path="/chat/:id" element={<Chat navbarChange={handleActiveIndexChange} />} />
+          <Route path="/chat" element={<ChatPage navbarChange={handleActiveIndexChange} />} />
           <Route path="/news" element={<News navbarChange={handleActiveIndexChange} />} />
           <Route path="/profile" element={<Profile navbarChange={handleActiveIndexChange} />} />
 
