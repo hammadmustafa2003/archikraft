@@ -83,15 +83,6 @@ const Chat = (props) => {
       .then((res) => {
         console.log(res.data);
         setChats(res.data.messages.messages);
-        res.data.messages.messages.forEach((chat) => {
-          const div = document.createElement("div");
-          div.className = `${
-            chat.sender === ReactSession.get("email") ? style_sent : style_recv
-          }`;
-          div.innerHTML = chat.message.replace(/\n/g, "<br>");
-          chatbox.appendChild(div);
-        });
-        // TODO: Here fetch the feature vector from the database and use setFeatureVector to set the state
         setTimeout(() => {
           chatbox.scrollTop = chatbox.scrollHeight;
         }, 100);
@@ -169,9 +160,8 @@ const Chat = (props) => {
       chatbox.innerHTML = "";
       chats.forEach((chat) => {
         const div = document.createElement("div");
-        div.className = `${
-          chat.sender === ReactSession.get("email") ? style_sent : style_recv
-        }`;
+        div.className = `${chat.sender === ReactSession.get("email") ? style_sent : style_recv
+          }`;
         div.innerHTML = chat.message;
         chatbox.appendChild(div);
       });
@@ -182,9 +172,8 @@ const Chat = (props) => {
     chats.forEach((chat) => {
       if (chat.message.includes(searchStr)) {
         const div = document.createElement("div");
-        div.className = `${
-          chat.sender === ReactSession.get("email") ? style_sent : style_recv
-        }`;
+        div.className = `${chat.sender === ReactSession.get("email") ? style_sent : style_recv
+          }`;
         div.innerHTML = chat.message;
         chatbox.appendChild(div);
       }
@@ -226,9 +215,8 @@ const Chat = (props) => {
   return (
     <div className="flex flex-row flex-nowrap justify-center align-middle h-screen md:h-screen relative">
       <div
-        className={`transform transition-transform ease-out duration-300 absolute top-0 left-0 h-full w-full z-20 filter backdrop-blur-xl ${
-          isChatHistoryVisible ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`transform transition-transform ease-out duration-300 absolute top-0 left-0 h-full w-full z-20 filter backdrop-blur-xl ${isChatHistoryVisible ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {<ChatHistory toggleHistory={toggleChatHistory} />}
       </div>
@@ -296,6 +284,15 @@ const Chat = (props) => {
             id="chatbox"
             style={{ scrollBehavior: "smooth" }}
           >
+            {
+              chats.map((chat, index) => {
+                return (
+                  <div key={index} className={`${chat.sender === "gemini" ? style_recv : style_sent}`}>
+                    {chat.message}
+                  </div>
+                );
+              })
+            }
             {loadingMsg && (
               <div key={-1} className={style_sent}>
                 {" "}
@@ -349,7 +346,7 @@ const Chat = (props) => {
               const soundData = new FormData();
               soundData.append("file", recordedBlob.blob);
               axios
-                .post("http://127.0.0.1:5000/transcribe", soundData)
+                .post("http://127.0.0.1:8000/transcribe", soundData)
                 .then((res) => {
                   console.log(res.data);
                   const transcript = res.data.text;

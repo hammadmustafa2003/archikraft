@@ -52,7 +52,7 @@ app.post('/signup', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
@@ -85,7 +85,7 @@ app.post('/login', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
@@ -116,7 +116,7 @@ app.post('/forgot-password', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
@@ -169,7 +169,7 @@ app.post('/reset-password', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
@@ -198,9 +198,9 @@ app.post('/logout', async (req, res) => {
 
 app.post('/saveMessage', async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const { message, sender, featureVector, lastMsg, id } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const answer = await generateContent(message, featureVector, lastMsg);
     const jsonAnswer = JSON.parse(answer);
     console.log("Answer: ", jsonAnswer);
@@ -211,20 +211,20 @@ app.post('/saveMessage', async (req, res) => {
     const headers = {
       'ngrok-skip-browser-warning': '678'
     };
-    const response = await axios.get(apiUrl, {
-      params: {
-        sender: sender,
-        receiver: 'gemini',
-        message: message,
-        timestamp: new Date(),
-        id: id,
-        featureVector: jsonAnswer["featureVector"]
-      },
-      headers: headers
-    });
-    console.log(response.data);
+    let payload = {
+      sender: sender,
+      receiver: 'gemini',
+      message: message,
+      timestamp: new Date().toISOString(),
+      id: id,
+      featureVector: jsonAnswer["featureVector"]
+    };
+
+    console.log("Payload" , payload);
+    const response = await axios.post(apiUrl,payload);
+    console.log("Saving user message",response.data);
     let { status_code, detail } = response.data;
-    if (status_code == 400) {
+    if (status_code != 200) {
       res.status(400).json({ error: detail });
     }
     else if (status_code == 200) {
@@ -234,18 +234,17 @@ app.post('/saveMessage', async (req, res) => {
       const headers = {
         'ngrok-skip-browser-warning': '678'
       };
-      const response = await axios.get(apiUrl, {
-        params: {
-          sender: 'gemini',
-          receiver: sender,
-          message: jsonAnswer["response"],
-          timestamp: new Date(),
-          id: id,
-          featureVector: JSON.stringify(jsonAnswer["featureVector"])
-        },
-        headers: headers
-      });
-      console.log(response.data);
+
+      payload = {
+        sender: 'gemini',
+        receiver: sender,
+        message: jsonAnswer["response"],
+        timestamp: new Date().toISOString(),
+        id: id,
+        featureVector: jsonAnswer["featureVector"]
+      }
+      const response = await axios.post(apiUrl, payload );
+      console.log("Saving AI response",response.data);
       let { status_code, detail } = response.data;
       if (status_code == 400) {
         res.status(400).json({ error: detail });
@@ -281,7 +280,7 @@ app.get('/getMessages', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
@@ -307,7 +306,7 @@ app.get('/getUsers', async (req, res) => {
     const response = await axios.get(apiUrl, {
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
@@ -338,7 +337,7 @@ app.post('/deleteUser', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 400) {
       res.status(400).json({ error: detail });
@@ -370,7 +369,7 @@ app.get('/addNews', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 200) {
       res.status(200).json({ message: detail });
@@ -394,7 +393,7 @@ app.get('/getNews', async (req, res) => {
     const response = await axios.get(apiUrl, {
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 200) {
       res.status(200).json({ message: detail, news: response.data.news });
@@ -422,7 +421,7 @@ app.post('/deleteNews', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 200) {
       res.status(200).json({ message: detail });
@@ -449,7 +448,7 @@ app.post('/getAllChatIds', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 200) {
       res.status(200).json({ message: detail, chatIds: response.data.chat_ids });
@@ -475,7 +474,7 @@ app.post('/getChat', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 200) {
       res.status(200).json({ message: detail, chat: response.data.chat });
@@ -502,7 +501,7 @@ app.post('/createChat', async (req, res) => {
       },
       headers: headers
     });
-    console.log(response.data);
+    // console.log(response.data);
     let { status_code, detail, id } = response.data;
     if (status_code == 200) {
       res.status(200).json({ message: detail, id: id });
@@ -515,30 +514,6 @@ app.post('/createChat', async (req, res) => {
   }
 });
 
-app.post('/transcribe', async (req, res) => {
-  try {
-    const soundData = new FormData();
-    soundData.append("file", req.body.file);
-
-    const apiUrl = 'http://127.0.0.1:8000/transcribe';
-    const response = await axios.post(apiUrl, soundData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-
-    console.log(response.data);
-    let { status_code, detail } = response.data;
-    if (status_code == 200) {
-      res.status(200).json({ message: detail });
-    }
-    else {
-      res.status(500).json({ error: 'An error occurred during transcribing' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred during transcribing' });
-  }
-});
 dotenv.config();
 
 // 1. Configuration
@@ -556,8 +531,8 @@ async function generateContent(message, featureVector, lastMsg) {
       OldFeatureVector: {featureVector}
 
       The user is giving information about the house whose floor plan is to be designed.
-      Extract the information from the input for the feature vector and then output the updated vecture vector, along with response (if required) in the following json format and maintain the order of the keys as given below: 
-      The feature vector should only have integers or floats in the value of key-value pairs of feature vector. If an information is not found replace it with -1.
+      Extract the information from the input for the feature vector and then output the updated vecture vector, along with response in the following json format and maintain the order of the keys as given below: 
+      The feature vector should only have integers or floats in the value of key-value pairs of feature vector. If an information is not found replace it with -1. And do not ask anything outside of the feature vector.
 
       Response Guidleines:
       If any of the information is not available in the input write a counter response to ask about that information in this string. 
@@ -583,20 +558,20 @@ async function generateContent(message, featureVector, lastMsg) {
             "FrontDoorLocationY_axis": float,
             "NumberofBedrooms": int
         },
-        "response": ""`;
+        "response": "{Message for user here}"`;
 
   // replace {user_prompt} with message
   const str1 = str.replace('{user_prompt}', message);
   const str2 = str1.replace('{featureVector}', JSON.stringify(featureVector));
   const str3 = str2.replace('{lastMsg}', lastMsg);
-  console.log(str3);
+  // console.log(str3);
 
   try {
     const prompt = str3;
     const result = await model.generateContent(prompt);
     // console.log('Result:', result);
     const response = await result.response;
-    console.log('Result:', response.text());
+    // console.log('Result:', response.text());
     const text = response.text();
     return text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1);
 
