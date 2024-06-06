@@ -217,7 +217,8 @@ app.post('/saveMessage', async (req, res) => {
         receiver: 'gemini',
         message: message,
         timestamp: new Date(),
-        id: id
+        id: id,
+        featureVector: jsonAnswer["featureVector"]
       },
       headers: headers
     });
@@ -239,7 +240,8 @@ app.post('/saveMessage', async (req, res) => {
           receiver: sender,
           message: jsonAnswer["response"],
           timestamp: new Date(),
-          id: id
+          id: id,
+          featureVector: JSON.stringify(jsonAnswer["featureVector"])
         },
         headers: headers
       });
