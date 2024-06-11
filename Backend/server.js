@@ -514,6 +514,35 @@ app.post('/createChat', async (req, res) => {
   }
 });
 
+app.post("/generateFloorPlan", async (req, res) => {
+  try {
+    const { featureVector } = req.body;
+    const apiUrl = 'http://127.0.0.1:8000/generateFloorPlan';
+    const headers = {
+      'ngrok-skip-browser-warning': '567'
+    };
+    const response = await axios.post(apiUrl, {
+        featureVector: featureVector
+      }
+    );
+    // console.log(response.data);
+    let { status_code, detail, floorPlan } = response.data;
+
+    // console.log("Floor Plan: ", floorPlan);
+    // console.log("details: ",detail)
+    // console.log("status_code: ",status_code)
+
+    if (status_code == 200) {
+      res.status(200).json({ message: detail, floorPlan: floorPlan });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during generating floor plan' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during generating floor plan' });
+  }
+});
+
 dotenv.config();
 
 // 1. Configuration
@@ -538,7 +567,7 @@ async function generateContent(message, featureVector, lastMsg) {
       If any of the information is not available in the input write a counter response to ask about that information in this string. 
       Ask in a casual manner like converstion. Try to add minimum tecnical and mathamatical terms. Also ask for 1 missing feature at a time. 
       If user is unsure fill what suits according to the rest of information. Do not show feature vector to the user. Also dont use word 'Response' before generating a response.
-      The user does not know that the information is going into feature vector, so the conversation should be casual.
+      The user does not know that the information is going into feature vector, so the conversation should be casual. And do not return an empty response. If all information is filled just ask the user to "Click on the floor plan button in the top right corner to see the floor plan". 
       Again the output should be in json format as follows:
         "featureVector":{
             "NumberofLivingRooms": int, 
@@ -564,7 +593,7 @@ async function generateContent(message, featureVector, lastMsg) {
   const str1 = str.replace('{user_prompt}', message);
   const str2 = str1.replace('{featureVector}', JSON.stringify(featureVector));
   const str3 = str2.replace('{lastMsg}', lastMsg);
-  // console.log(str3);
+  console.log("Sending messgae to AI: ",str3);
 
   try {
     const prompt = str3;

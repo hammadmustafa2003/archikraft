@@ -1,23 +1,19 @@
 import { React, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ChatHistory from "../components/ChatHistory";
-import plan1 from "../images/plan1.png";
 import historyIcon from "../images/history.png";
-import closeIcon from "../images/close.png";
 import floorMapIcon from "../images/floor_plan_icon.png";
 import SendIcon from "../images/send.png";
 import MicIcon from "../images/mic.png";
 import StopIcon from "../images/stop.png";
-import SearchIcon from "../images/search.png";
+import Floorplan from "./Floorplan";
+// import SearchIcon from "../images/search.png";
 import LogoWhite from "../images/logo/Logo_white.png";
-import download from "../images/download_white.png";
-import pdf from "../images/pdf.svg";
 import axios from "axios";
 import { ReactSession } from "react-client-session";
 import { useEffect } from "react";
 // import Pdf from "react-to-pdf";
-import { jsPDF } from "jspdf";
-import { createRef } from "react";
+
 import Loader from "./../utils/Loader";
 import { ReactMic } from "react-mic";
 
@@ -52,8 +48,8 @@ const Chat = (props) => {
   const [isChatHistoryVisible, setChatHistoryVisible] = useState(false);
   const [chats, setChats] = useState([]);
   const [message, setMessage] = useState("");
-  const [searchStr, setSearchStr] = useState("");
   const [recordingStarted, setRecordingStarted] = useState(false);
+  const navigate = useNavigate();
 
   const chatID = useParams().id;
 
@@ -70,7 +66,7 @@ const Chat = (props) => {
   props.navbarChange(-1);
 
   // get previous chats from backend
-  const getChats = () => {
+  const getChats = async () => {
     const chatbox = document.getElementById("chatbox");
     // clear chatbox
     chatbox.scrollTop = chatbox.scrollHeight;
@@ -83,6 +79,9 @@ const Chat = (props) => {
       .then((res) => {
         console.log(res.data);
         setChats(res.data.messages.messages);
+        setFeatureVector(res.data.messages.featureVector);
+        // console.log(res.data.messages.featureVector);
+        // console.log(featureVector);
         setTimeout(() => {
           chatbox.scrollTop = chatbox.scrollHeight;
         }, 100);
@@ -94,7 +93,7 @@ const Chat = (props) => {
   };
 
   useEffect(() => {
-    console.log(chatID);
+    // console.log(chatID);
     getChats();
   }, [chatID]);
 
@@ -119,7 +118,8 @@ const Chat = (props) => {
     // if session is not set, redirect to login page
     if (ReactSession.get("email") === null) {
       alert("Please login to continue.");
-      window.location.href = "/login";
+      // window.location.href = "/login";
+      navigate("/login");
     }
     // send message to backend
     const payload = {
@@ -151,65 +151,10 @@ const Chat = (props) => {
     sendMsg();
   };
 
-  const searchMsg = (e) => {
-    e.preventDefault();
-    // search for message in chats
-    if (searchStr === "") {
-      // show all messages
-      const chatbox = document.getElementById("chatbox");
-      chatbox.innerHTML = "";
-      chats.forEach((chat) => {
-        const div = document.createElement("div");
-        div.className = `${chat.sender === ReactSession.get("email") ? style_sent : style_recv
-          }`;
-        div.innerHTML = chat.message;
-        chatbox.appendChild(div);
-      });
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
-    const chatbox = document.getElementById("chatbox");
-    chatbox.innerHTML = "";
-    chats.forEach((chat) => {
-      if (chat.message.includes(searchStr)) {
-        const div = document.createElement("div");
-        div.className = `${chat.sender === ReactSession.get("email") ? style_sent : style_recv
-          }`;
-        div.innerHTML = chat.message;
-        chatbox.appendChild(div);
-      }
-    });
-    chatbox.scrollTop = chatbox.scrollHeight;
-  };
 
   const parseAudio = (e) => {
     e.preventDefault();
     setRecordingStarted(!recordingStarted);
-  };
-
-  // add a download button to download the generated floor plan
-  const downloadFloorPlan = () => {
-    const img = document.getElementById("generated_floor_plan");
-    const link = document.createElement("a");
-    link.href = img.src;
-    link.download = "floor_plan.png";
-    link.click();
-  };
-
-  const downloadFloorPlanPDF = () => {
-    // convert image to pdf
-    const img = document.getElementById("generated_floor_plan");
-    const link = document.createElement("a");
-    link.href = img.src;
-
-    const pdfRef = createRef();
-    const options = {
-      orientation: "landscape",
-      unit: "px",
-      format: [img.width, img.height],
-    };
-    const pdf = new jsPDF(options);
-    pdf.addImage(img.src, "PNG", 0, 0);
-    pdf.save("floor_plan.pdf");
   };
 
   return (
@@ -258,27 +203,6 @@ const Chat = (props) => {
             </div>
           </Link>
 
-          <form
-            className="flex flex-row justify-center items-center space-x-2"
-            onSubmit={searchMsg}
-          >
-            <input
-              id="searchBox"
-              value={searchStr}
-              onChange={(e) => setSearchStr(e.target.value)}
-              type="text"
-              placeholder="Search"
-              className="w-full h-12 rounded-lg border-2 border-gray-300 p-2 bg-[rgb(255,255,255,0.3)] text-white focus:outline-none focus:shadow-outline m-5"
-            />
-
-            <button
-              type="submit"
-              className="bg-[rgb(0,255,0,0.05)] hover:bg-green-500 hover:-translate-y-1 hover:scale-105 ease-in duration-100 border-[1.5px] border-white hover:border-[#00cc00] p-2 rounded-lg"
-            >
-              <img src={SearchIcon} alt="send" className="w-10" />
-            </button>
-          </form>
-
           <div
             className="flex flex-col flex-grow space-y-5 mt-2 md:mt-5 mb-5 md:mb-10 overflow-y-auto webkit-scrollbar:none;	"
             id="chatbox"
@@ -305,7 +229,7 @@ const Chat = (props) => {
             className="flex flex-row justify-center items-center space-x-2"
             onSubmit={sendMsgEventHandler}
           >
-            {/* < > */}
+
             <input
               id="msg"
               value={message}
@@ -362,35 +286,7 @@ const Chat = (props) => {
           {/* </div> */}
         </div>
         {isChatOutputVisible && (
-          <div
-            key="image"
-            className="h-screen w-screen fixed top-0 left-0 backdrop-blur-xl z-20"
-          >
-            <button
-              className="fixed top-5 right-5 border-0"
-              onClick={toggleChatOutput}
-            >
-              <img src={closeIcon} alt="close" className="w-12 h-12" />
-            </button>
-            <img
-              id="generated_floor_plan"
-              src={plan1}
-              className="fixed w-[75vmin] md:top-[12.5%] md:left-1/3 top-1/3 left-[12.5%]"
-              alt="generated_floor_plan"
-            />
-            <button
-              className="fixed bottom-5 right-5 border-0"
-              onClick={downloadFloorPlan}
-            >
-              <img src={download} alt="close" className="w-12 h-12" />
-            </button>
-            <button
-              className="fixed bottom-5 left-5 border-0"
-              onClick={downloadFloorPlanPDF}
-            >
-              <img src={pdf} alt="close" className="w-12 h-12" />
-            </button>
-          </div>
+          <Floorplan toggleChatOutput={toggleChatOutput} featureVector={featureVector} />
         )}
       </div>
     </div>
