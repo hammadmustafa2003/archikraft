@@ -4,6 +4,7 @@ import getStripe from './../utils/getStripe'
 import { ReactSession } from "react-client-session";
 import "../../node_modules/aos/dist/aos.css"
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 
 const blockMaker = (navigate, title, monthlyPrice, annualPrice, features) => {
@@ -11,6 +12,14 @@ const blockMaker = (navigate, title, monthlyPrice, annualPrice, features) => {
     const featureList = features.map((feature, index) => (
         <li key={index} className="text-md lg:text-lg text-white mb-2">{feature}</li>
     ));
+
+    const generateUUID = () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 
 
     async function handleCheckout() {
@@ -21,7 +30,7 @@ const blockMaker = (navigate, title, monthlyPrice, annualPrice, features) => {
             return;
         }
 
-        const lineItems = [{ quantity: 1}];
+        const lineItems = [{ quantity: 1 }];
 
         if (title === 'Basic') {
             lineItems[0].price = process.env.REACT_APP_PUBLIC_STRIPE_PRICE_BASIC_ID;
@@ -31,12 +40,23 @@ const blockMaker = (navigate, title, monthlyPrice, annualPrice, features) => {
             lineItems[0].price = process.env.REACT_APP_PUBLIC_STRIPE_PRICE_ENT_ID;
         }
 
+        const uuid = generateUUID();
+        axios.post("http://localhost:5000/saveUUID", { uuid: uuid, email: email })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            }
+            );
+
+
         // console.log(lineItems);
         const stripe = await getStripe();
         const { error } = await stripe.redirectToCheckout({
             lineItems: lineItems,
             mode: 'subscription',
-            successUrl: `http://localhost:3000/finalizePayment`,
+            successUrl: `http://localhost:3000/finalizePayment?price=${monthlyPrice}&uuid=${uuid}&title=${title}`,
             cancelUrl: `http://localhost:3000/pricing`,
             customerEmail: email,
         });
