@@ -4,6 +4,8 @@ import closeIcon from "../images/close.png";
 import plan1 from "../images/plan1.png";
 import { jsPDF } from "jspdf";
 import { createRef, useEffect } from "react";
+
+// import { Canvg } from 'canvg';
 import axios from "axios";
 
 
@@ -11,28 +13,39 @@ const Floorplan = (props) => {
 
   // add a download button to download the generated floor plan
   const downloadFloorPlan = () => {
-    const img = document.getElementById("generated_floor_plan");
-    const link = document.createElement("a");
-    link.href = img.src;
-    link.download = "floor_plan.png";
-    link.click();
+    const svg = document.getElementById('floor-plan').outerHTML;
+
+    axios.post('http://localhost:5000/convertToPng', { svg: svg }, { responseType: 'blob' })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'floor-plan.png');
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      })
+      .catch((error) => {
+        console.error("Error downloading the PNG", error);
+      });
   };
 
-  const downloadFloorPlanPDF = () => {
-    // convert image to pdf
-    const img = document.getElementById("generated_floor_plan");
-    const link = document.createElement("a");
-    link.href = img.src;
+  const downloadFloorPlanPDF = async () => {
+    const svg = document.getElementById('floor-plan').outerHTML;
 
-    const pdfRef = createRef();
-    const options = {
-      orientation: "landscape",
-      unit: "px",
-      format: [img.width, img.height],
-    };
-    const pdf = new jsPDF(options);
-    pdf.addImage(img.src, "PNG", 0, 0);
-    pdf.save("floor_plan.pdf");
+    axios.post('http://localhost:5000/convertToPdf', { svg: svg }, { responseType: 'blob' })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'floor-plan.pdf');
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      })
+      .catch((error) => {
+        console.error("Error downloading the PDF", error);
+      });
   };
 
   // Function to calculate the centroid of a polygon
@@ -59,32 +72,29 @@ const Floorplan = (props) => {
     polygons.forEach(polygon => {
       const points = polygon.map(point => {
         for (let i = 0; i < point.length; i++) {
-          point[i] = point[i] * 2;
+          point[i] = (point[i] * 2) + 10;
         }
         return point.join(',');
       }).join(' ');
-      console.log("Points are ", points);
 
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
       path.setAttribute('points', points);
 
       // Example styling, you can customize as needed
-      path.setAttribute('fill', color);
-      path.setAttribute('stroke', 'white');
+      path.setAttribute('fill', "white");
+      path.setAttribute('stroke', 'black');
       path.setAttribute('stroke-width', '1');
 
       svg.appendChild(path);
 
       const centroid = calculateCentroid(polygon);
-      console.log("Centroid is ", centroid, " for room type ", roomType);
 
       // Create a text element for the room type label
       const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       text.setAttribute('x', centroid[0] * 0.8); // Adjust for scaling
       text.setAttribute('y', centroid[1]); // Adjust for scaling
-      // text.setAttribute('text-anchor', 'middle');
       text.setAttribute('font-size', '10');
-      text.setAttribute('fill', 'white');
+      text.setAttribute('fill', 'black');
       text.textContent = roomType;
 
       svg.appendChild(text);
@@ -149,9 +159,7 @@ const Floorplan = (props) => {
           alt="generated_floor_plan"
         /> */}
         <div className="fixed w-[75vmin] md:top-[12.5%] lg:left-1/4 md:left-[10%] top-1/3 left-[12.5%] ">
-          <svg id="floor-plan" width="800" height="800" viewBox="0 0 500 500">
-
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" id="floor-plan" width="600" height="600" viewBox="0 0 400 400"></svg>
         </div>
 
       </center>

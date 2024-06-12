@@ -7,7 +7,12 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { response } = require('express');
 const dotenv = require('dotenv');
+var fs = require('fs');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const PDFDocument = require('pdfkit');
+const SVGtoPDF = require('svg-to-pdfkit');
+const sharp = require('sharp');
 
 
 
@@ -251,7 +256,6 @@ app.post('/saveMessage', async (req, res) => {
       }
       else if (status_code == 200) {
         res.status(200).json({ message: detail, answer: jsonAnswer["response"], featureVector: jsonAnswer["featureVector"] });
-        // TODO: save featureVector in database
       }
       else {
         res.status(500).json({ error: 'An error occurred during saving message' });
@@ -608,6 +612,59 @@ async function generateContent(message, featureVector, lastMsg) {
     console.error('Error generating content:', error);
   }
 }
+
+
+app.post("/convertToPdf", async (req, res) => {
+  try {
+    const { svg } = req.body;
+    console.log("SVG: ", svg);
+
+    // Create a new PDF document
+    const doc = new PDFDocument();
+    let buffers = [];
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', () => {
+      let pdfData = Buffer.concat(buffers);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename=file.pdf');
+      res.send(pdfData);
+    });
+
+    // Convert SVG to PDF
+    SVGtoPDF(doc, svg, 10, 10);
+
+    // Finalize the PDF and end the stream
+    doc.end();
+    // res.status(200).json({ message: 'Pdf generated successfully' });
+  } catch (error) {
+    console.log("Error: ", error);
+    res.status(500).json({ error: 'An error occurred during converting to pdf' });
+  }
+})
+
+app.use(bodyParser.json());
+app.post('/convertToPng', async (req, res) => {
+  try {
+    const { svg } = req.body;
+    // console.log("SVG: ", svg);
+
+    // Convert SVG to PNG using sharp
+    const pngBuffer = await sharp(Buffer.from(svg))
+      .png()
+      .flatten({ background: { r: 255, g: 255, b: 255 } })
+      .toBuffer();
+
+    // Set response headers
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Disposition', 'attachment; filename=example.png');
+
+    // Send the PNG buffer as the response
+    res.send(pngBuffer);
+  } catch (error) {
+    console.log("Error: ", error);
+    res.status(500).json({ error: 'An error occurred during converting to png' });
+  }
+});
 
 // Start the server
 app.listen(port, () => {
