@@ -82,7 +82,7 @@ const ChatPage = (props) => {
         </button>
 
         <div className="flex flex-col m-2 p-4 h-full rounded-lg relative">
-          <Link to="#">
+          <Link to="/">
             <div className="flex items-center space-x-2 justify-center mt-10 xs:mt-0">
               <img
                 src={LogoWhite}

@@ -59,3 +59,11 @@
   background-color: #ffffff18;
   box-shadow: 0px 0px 24px 17px #ffffff0a
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide the scrollbar for Webkit browsers */
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* Hide the scrollbar for IE and Edge */
+  scrollbar-width: none;  /* Hide the scrollbar for Firefox */
+}

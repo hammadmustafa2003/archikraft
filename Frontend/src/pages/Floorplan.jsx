@@ -158,7 +158,7 @@ const Floorplan = (props) => {
           //   className="fixed w-[75vmin] md:top-[12.5%] md:left-1/3 top-1/3 left-[12.5%]"
           alt="generated_floor_plan"
         /> */}
-        <div className="fixed w-[75vmin] md:top-[12.5%] lg:left-1/4 md:left-[10%] top-1/3 left-[12.5%] ">
+        <div className="fixed w-[75vmin] md:top-[12.5%] lg:left-1/4 md:left-[10%] top-[20%] left-[12.5%] overflow-scroll no-scrollbar border-white border-2 bg-[rgb(255,255,255,0.4)] ">
           <svg xmlns="http://www.w3.org/2000/svg" id="floor-plan" width="600" height="600" viewBox="0 0 400 400"></svg>
         </div>
 

@@ -27,16 +27,6 @@ const MobileMenu = (props) => {
                     </center>
 
                     <div className="flex items-center justify-center">
-                                {/* <button
-                                    class="flex md:hidden text-xl bg-blue-500 hover:scale-110 p-3 text-white rounded-md mr-5"
-                                    onClick={props.toggleLogin}>
-                                    Login
-                                </button>
-
-                <button class="flex md:hidden text-xl bg-white hover:-translate-y-1 p-3 text-blue-500 rounded-md"
-                onClick={props.toggleSignUp}>
-                                    Sign Up
-                                </button> */}
                                 {
                                     ReactSession.get("username") === null ?
                                         <div className="flex">
@@ -56,10 +46,10 @@ const MobileMenu = (props) => {
                                             <button
                                                 className="flex md:hidden transition ease-in-out delay-50 border-2 border-white bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-white  hover:text-blue-500 duration-150 p-2 text-white rounded-md mr-5"
                                                 onClick={() => {
-                                                    window.location.href = "/account";
+                                                    window.location.href = "/chat";
                                                 }}
                                             >
-                                                Profile
+                                                Chat
                                             </button>
 
                                             <button className="flex md:hidden transition ease-in-out delay-50 border-2 border-blue-400 bg-transparent hover:-translate-y-1 hover:scale-110 hover:bg-blue-400 hover:text-white duration-150 p-2 text-blue-400 rounded-md"
