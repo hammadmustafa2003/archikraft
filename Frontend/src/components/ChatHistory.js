@@ -4,7 +4,7 @@ import closeIcon from "../images/close.png";
 import { ReactSession } from "react-client-session";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 
 
@@ -61,7 +61,7 @@ const ChatHistory = (props) => {
                 </div>
                 <ul className="mb-10 scrollbar-hide overflow-y-auto h-full">
                     {chatHistory.map((c, index) => (
-                        <a href={`/chat/${c}`}>
+                        <a href={`/chat/${c}`} key={index}>
                             <li key={index} className="flex items-center font-semibold text-white hover:text-black m-2 p-2 hover:bg-[rgb(255,255,255,0.7)] h-12 rounded-md">
                                 {c}
                             </li>

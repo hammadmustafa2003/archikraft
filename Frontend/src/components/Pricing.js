@@ -45,7 +45,7 @@ const blockMaker = (navigate, title, monthlyPrice, annualPrice, features) => {
 
     return (
         <div data-aos="zoom-in" data-aos-duration='1000' data-aos-easing="ease-out-quart">
-            <div className="flex flex-col items-center justify-center text-left lg:scale-[85%] hover:scale-100 ease-out duration-300 lg:w-[30vw] bg-[#ececec3b] rounded-xl lg:rounded-3xl p-12 lg:h-[85vh] lg:m-auto m-5" >
+            <div className="flex flex-col items-center justify-center text-left lg:scale-[85%] hover:scale-100 ease-out duration-300 lg:w-[28vw] md:w-[60vw] w-[70vw] bg-[#ececec3b] rounded-xl lg:rounded-3xl p-12 lg:h-[85vh] lg:m-auto m-5" >
                 <h1 className="text-2xl lg:text-3xl font-black mb-3 bg-gradient-to-tr from-teal-300 via-blue-600 to-purple-400 inline-block text-transparent bg-clip-text">${monthlyPrice}</h1>
                 <span className=" text-xs lg:text-xs font-light mb-3 text-white">Annually charged ${annualPrice}</span>
                 <h1 className="text-3xl lg:text-5xl font-black mb-3 bg-gradient-to-tr from-teal-300 via-blue-600 to-purple-400 inline-block text-transparent bg-clip-text">{title}</h1>
