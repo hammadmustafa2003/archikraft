@@ -681,13 +681,13 @@ app.post('/subscribe', async (req, res) => {
     };
     const payload = {
       email: email,
-      price: price,
+      price:  Number(price),
       subscription: subscription,
       timestamp: timestamp
     };
-    const response = await axios.post(apiUrl, payload, {
-      headers: headers
-    });
+    console.log("Payload: ", payload);
+
+    const response = await axios.post(apiUrl, payload);
     // console.log(response.data);
     let { status_code, detail } = response.data;
     if (status_code == 200) {
@@ -697,6 +697,7 @@ app.post('/subscribe', async (req, res) => {
       res.status(500).json({ error: 'An error occurred during subscribing' });
     }
   } catch (error) {
+    console.log("Error: ", error);
     res.status(500).json({ error: 'An error occurred during subscribing' });
   }
 });
@@ -704,7 +705,7 @@ app.post('/subscribe', async (req, res) => {
 app.post("/convertToPdf", async (req, res) => {
   try {
     const { svg } = req.body;
-    console.log("SVG: ", svg);
+    // console.log("SVG: ", svg);
 
     // Create a new PDF document
     const doc = new PDFDocument();

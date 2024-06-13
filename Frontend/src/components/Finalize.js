@@ -18,6 +18,7 @@ const Loader = (props) => {
 const Finalize = () => {
 
     const navigate = useNavigate();
+    const [error, setError] = React.useState("");
 
     // get uuid and price from query params
     const queryString = useLocation().search;
@@ -28,7 +29,7 @@ const Finalize = () => {
 
     const email = ReactSession.get("email");
 
-    const getUUID = async () => {
+    const verifyPayment = async () => {
         axios.post("http://localhost:5000/getUUID", { email: email })
             .then((response) => {
                 // get status_code from response
@@ -37,21 +38,22 @@ const Finalize = () => {
                 console.log(uuid);
                 // match uuid from response and query params
                 if (response.data.uuid === uuid) {
-                    axios.post("http://localhost:5000/subscribe", {
+                    const payload = {
                         email: email,
                         price: price,
                         subscription: title,
                         timestamp: new Date().toISOString(),
-                    })
+                    }
+                    console.log(payload);
+                    axios.post("http://localhost:5000/subscribe", payload)
                         .then((response) => {
-                            console.log(response);
+                            navigate('/chat');
                         })
                         .catch((error) => {
                             console.log(error);
-                        }
-                        );
-
+                    });
                 } else {
+                    setError("Invalid subscription. Please try again.");
                     console.log("Not Matched");
                 }
             })
@@ -67,21 +69,20 @@ const Finalize = () => {
             navigate('/login');
             return;
         }
-
-        setTimeout(() => {
-            navigate('/chat');
-        }, 3000);
-        // TODO: Here save the subscription to the database
-        // axios.post('http://localhost:5000/api/subscription', { email: email })
-
-        getUUID();
+        verifyPayment();
     });
-    return (
-        <div className='h-screen w-screen flex flex-col gap-5 justify-center items-center'>
-            <h1 className='text-white text-3xl'>Finalizing your Payment</h1>
-            <Loader />
-        </div>
-    );
+    if (error === "") {
+        return (
+                <div className='h-screen w-screen flex flex-col gap-5 justify-center items-center'>
+                    <h1 className='text-white text-3xl'>Finalizing your Payment</h1>
+                    <Loader />
+                </div>
+        )} else{
+        return (
+                <div className='h-screen w-screen flex flex-col gap-5 justify-center items-center'>
+                    <h1 className='text-white text-3xl'>{error}</h1>
+                </div>        
+        )}
 };
 
 export default Finalize;
