@@ -157,6 +157,7 @@ app.post('/forgot-password', async (req, res) => {
 });
 
 
+
 app.post('/reset-password', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -225,9 +226,9 @@ app.post('/saveMessage', async (req, res) => {
       featureVector: jsonAnswer["featureVector"]
     };
 
-    console.log("Payload" , payload);
-    const response = await axios.post(apiUrl,payload);
-    console.log("Saving user message",response.data);
+    console.log("Payload", payload);
+    const response = await axios.post(apiUrl, payload);
+    console.log("Saving user message", response.data);
     let { status_code, detail } = response.data;
     if (status_code != 200) {
       res.status(400).json({ error: detail });
@@ -248,8 +249,8 @@ app.post('/saveMessage', async (req, res) => {
         id: id,
         featureVector: jsonAnswer["featureVector"]
       }
-      const response = await axios.post(apiUrl, payload );
-      console.log("Saving AI response",response.data);
+      const response = await axios.post(apiUrl, payload);
+      console.log("Saving AI response", response.data);
       let { status_code, detail } = response.data;
       if (status_code == 400) {
         res.status(400).json({ error: detail });
@@ -518,6 +519,7 @@ app.post('/createChat', async (req, res) => {
   }
 });
 
+
 app.post("/generateFloorPlan", async (req, res) => {
   try {
     const { featureVector } = req.body;
@@ -597,7 +599,7 @@ async function generateContent(message, featureVector, lastMsg) {
   const str1 = str.replace('{user_prompt}', message);
   const str2 = str1.replace('{featureVector}', JSON.stringify(featureVector));
   const str3 = str2.replace('{lastMsg}', lastMsg);
-  console.log("Sending messgae to AI: ",str3);
+  // console.log(str3);
 
   try {
     const prompt = str3;
@@ -613,6 +615,91 @@ async function generateContent(message, featureVector, lastMsg) {
   }
 }
 
+
+app.post('/saveUUID', async (req, res) => {
+  try {
+    const { email, uuid } = req.body;
+    const apiUrl = 'http://0.0.0.0:8000/save-uuid';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '123'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        email: email,
+        uuid: uuid
+      },
+      headers: headers
+    });
+    // console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during saving uuid' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during saving uuid' });
+  }
+});
+
+app.post('/getUUID', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const apiUrl = 'http://0.0.0.0:8000/get-uuid';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '234'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        email: email
+      },
+      headers: headers
+    });
+    // console.log(response.data);
+    let { status_code, detail, uuid } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail, uuid: uuid });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during getting uuid' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during getting uuid' });
+  }
+});
+
+app.post('/subscribe', async (req, res) => {
+  try {
+    const { email, price, subscription, timestamp } = req.body;
+    const apiUrl = 'http://0.0.0.0:8000/subscribe';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '345'
+    };
+    const payload = {
+      email: email,
+      price: price,
+      subscription: subscription,
+      timestamp: timestamp
+    };
+    const response = await axios.post(apiUrl, payload, {
+      headers: headers
+    });
+    // console.log(response.data);
+    let { status_code, detail } = response.data;
+    if (status_code == 200) {
+      res.status(200).json({ message: detail });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during subscribing' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred during subscribing' });
+  }
+});
 
 app.post("/convertToPdf", async (req, res) => {
   try {

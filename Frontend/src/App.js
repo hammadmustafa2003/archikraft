@@ -47,12 +47,40 @@ const ProtectedURL = (activeIndex, handleActiveIndexChange) => {
           <Route path="/forget" element={<Forget />} />
           <Route path="/otp" element={<OTP />} />
           <Route path="/newpass" element={<NewPass />} />
-          <Route path="/admin" element={<Admin navbarChange={handleActiveIndexChange} />} />
 
         </Routes>
 
         {activeIndex !== -1 && <Footer />}
 
+      </>
+    )
+  }
+  else if (ReactSession.get("role") === "admin") {
+    return (
+      <>
+        {activeIndex !== -1 && (
+          <Navbar
+            activeIndex={activeIndex} // Pass activeIndex as props
+            onActiveIndexChange={handleActiveIndexChange} // Pass handleActiveIndexChange as props
+          />
+        )}
+        <Routes>
+          {/* <Route path = "/" element = {<Home />} />  */}
+          <Route path="/" element={<Home navbarChange={handleActiveIndexChange} />} />
+          <Route path="/our-vision" element={<Vision navbarChange={handleActiveIndexChange} />} />
+          <Route path="/pricing" element={<Pricing navbarChange={handleActiveIndexChange} />} />
+          <Route path="/about-us" element={<About navbarChange={handleActiveIndexChange} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/forget" element={<Forget />} />
+          <Route path="/otp" element={<OTP />} />
+          <Route path="/newpass" element={<NewPass />} />
+          <Route path="/admin" element={<Admin navbarChange={handleActiveIndexChange} />} />
+          <Route path="*" element={<Admin navbarChange={handleActiveIndexChange} />} />
+
+        </Routes>
+
+        {activeIndex !== -1 && <Footer />}
       </>
     )
   }
@@ -76,12 +104,12 @@ const ProtectedURL = (activeIndex, handleActiveIndexChange) => {
           <Route path="/forget" element={<Forget />} />
           <Route path="/otp" element={<OTP />} />
           <Route path="/newpass" element={<NewPass />} />
-          <Route path="/admin" element={<Admin navbarChange={handleActiveIndexChange} />} />
           <Route path="/chat" element={<ChatPage navbarChange={handleActiveIndexChange} />} />
           <Route path="/chat/:id" element={<Chat navbarChange={handleActiveIndexChange} />} />
           <Route path="/news" element={<News navbarChange={handleActiveIndexChange} />} />
           <Route path="/profile" element={<Profile navbarChange={handleActiveIndexChange} />} />
           <Route path="/finalizePayment" element={<Finalize />} />
+          <Route path="*" element={<Home navbarChange={handleActiveIndexChange} />} />
 
         </Routes>
 
