@@ -23,6 +23,19 @@ const ChatHistory = (props) => {
             }
         }
         );
+
+        const payload1 = {
+            email: ReactSession.get("email"),
+        };
+        console.log(payload1)
+        axios.get("http://localhost:5000/getPlan", {
+            params: payload1
+        }).then((response) => {
+            if (response.status === 200) {
+                console.log(response.data);
+                ReactSession.set("plan", response.data.plan);
+            }
+        })
     }, []);
 
     const createChat = (e) => {
@@ -48,6 +61,18 @@ const ChatHistory = (props) => {
             });
     };
 
+    const getNumberOfChats = () => {
+        const plan = ReactSession.get("plan");
+        if (plan === "basic") {
+            return 5;
+        } else if (plan === "pro") {
+            return 10;
+        } else if (plan === "enterprise") {
+            return 200;
+        } else{
+            return 1;
+        }
+    }
 
     return (
         <div key="chat-history" className=" w-max h-full bg-slate-950 shadow-xl shadow-black relative">
@@ -68,8 +93,10 @@ const ChatHistory = (props) => {
                         </a>
                     ))}
                 </ul>
-                <button onClick={createChat}
-                    className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"> Create new plan </button>
+                {chatHistory.length < getNumberOfChats() &&(    
+                    <button onClick={createChat}
+                        className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"> Create new plan </button>
+                )}
                 <button className="flex items-center justify-center font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-3 ease-out duration-150"
                     onClick={() => {
                         window.location.href = "/news";

@@ -22,6 +22,46 @@ import Loader from "./../utils/Loader";
 import { ReactMic } from "react-mic";
 
 const ChatPage = (props) => {
+  const [chatHistory, setChatHistory] = useState([]);
+
+  useEffect(() => {
+    const payload = {
+      user: ReactSession.get("email"),
+    };
+    axios.post("http://localhost:5000/getAllChatIds", payload).then((response) => {
+      if (response.status === 200) {
+        console.log(response.data);
+        setChatHistory(response.data.chatIds);
+      }
+    });
+
+    const payload1 = {
+      email: ReactSession.get("email"),
+    };
+    console.log(payload1)
+    axios.get("http://localhost:5000/getPlan", {
+      params: payload1
+    }).then((response) => {
+      if (response.status === 200) {
+        console.log(response.data);
+        ReactSession.set("plan", response.data.plan);
+      }
+    })
+  }, []);
+
+  const getNumberOfChats = () => {
+    const plan = ReactSession.get("plan");
+    if (plan === "basic") {
+      return 5;
+    } else if (plan === "pro") {
+      return 10;
+    } else if (plan === "enterprise") {
+      return 200;
+    } else {
+      return 1;
+    }
+  }
+
   const [isChatHistoryVisible, setChatHistoryVisible] = useState(false);
 
   const toggleChatHistory = () => {
@@ -62,9 +102,8 @@ const ChatPage = (props) => {
   return (
     <div className="flex flex-row flex-nowrap justify-center align-middle h-screen md:h-screen relative">
       <div
-        className={`transform transition-transform ease-out duration-300 absolute top-0 left-0 h-full w-full z-20 filter backdrop-blur-xl ${
-          isChatHistoryVisible ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`transform transition-transform ease-out duration-300 absolute top-0 left-0 h-full w-full z-20 filter backdrop-blur-xl ${isChatHistoryVisible ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {<ChatHistory toggleHistory={toggleChatHistory} />}
       </div>
@@ -96,13 +135,20 @@ const ChatPage = (props) => {
               </span>
             </div>
           </Link>
-          <button
-            onClick={createChat}
-            className="font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-1 ease-out duration-150"
-          >
-            {" "}
-            Create new plan{" "}
-          </button>
+          {chatHistory.length < getNumberOfChats() ?(
+            <button
+              onClick={createChat}
+              className="font-bold text-white mx-2 p-2 mt-auto mb-6 hover:bg-green-500 h-12 rounded-md border hover:border-0 scale-90 hover:scale-105 hover:-translate-y-1 ease-out duration-150"
+            >
+              {" "}
+              Create new plan{" "}
+            </button>
+          )
+          : (
+            <h1 className="font-bold text-white mx-2 p-2 mt-auto mb-6">
+              You have reached the limit of your plan. Please  <span><Link className="underline text-blue-500" to="/pricing">upgrade</Link></span> to create more chats.
+            </h1>
+          )}
         </div>
 
         {isChatOutputVisible && (

@@ -63,12 +63,35 @@ app.post('/signup', async (req, res) => {
       res.status(400).json({ error: detail });
     }
     else if (status_code == 200) {
-      res.status(200).json({ message: detail });
+      ////////////////////////////////////////////
+      const price = 0, subscription = 'free', timestamp = new Date().toISOString();
+      const apiUrl = 'http://0.0.0.0:8000/subscribe';
+      // add ngrok-skip-browser-warning in header
+      const headers = {
+        'ngrok-skip-browser-warning': '345'
+      };
+      const payload = {
+        email: email,
+        price: Number(price),
+        subscription: subscription,
+        timestamp: timestamp
+      };
+      console.log("Payload: ", payload);
+
+      const response = await axios.post(apiUrl, payload);
+      let { status_code, detail } = response.data;
+      if (status_code == 200) {
+        res.status(200).json({ message: detail });
+      }
+      else {
+        res.status(500).json({ error: 'An error occurred during subscribing' });
+      }
     }
     else {
       res.status(500).json({ error: 'An error occurred during signup' });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'An error occurred during signup' });
   }
 });
@@ -528,8 +551,8 @@ app.post("/generateFloorPlan", async (req, res) => {
       'ngrok-skip-browser-warning': '567'
     };
     const response = await axios.post(apiUrl, {
-        featureVector: featureVector
-      }
+      featureVector: featureVector
+    }
     );
     // console.log(response.data);
     let { status_code, detail, floorPlan } = response.data;
@@ -681,7 +704,7 @@ app.post('/subscribe', async (req, res) => {
     };
     const payload = {
       email: email,
-      price:  Number(price),
+      price: Number(price),
       subscription: subscription,
       timestamp: timestamp
     };
@@ -700,6 +723,38 @@ app.post('/subscribe', async (req, res) => {
     console.log("Error: ", error);
     res.status(500).json({ error: 'An error occurred during subscribing' });
   }
+});
+
+app.get("/getPlan", async (req, res) => {
+  try {
+    const { email } = req.query;
+    // console.log(req);
+    // console.log(req.query);
+    // console.log(req.params);
+    const apiUrl = 'http://0.0.0.0:8000/get-plan';
+    // add ngrok-skip-browser-warning in header
+    const headers = {
+      'ngrok-skip-browser-warning': '234'
+    };
+    const response = await axios.get(apiUrl, {
+      params: {
+        email: email
+      },
+      // headers: headers
+    });
+    // console.log(response.data);
+    let { status_code, plan } = response.data;
+    if (status_code === 200) {
+      res.status(200).json({ plan: plan });
+    }
+    else {
+      res.status(500).json({ error: 'An error occurred during getting plan' });
+    }
+  } catch (error) {
+    // console.log("Error: ", error);
+    res.status(500).json({ error: 'An error occurred during getting plan' });
+  }
+
 });
 
 app.post("/convertToPdf", async (req, res) => {
